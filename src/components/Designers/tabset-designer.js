@@ -1,37 +1,96 @@
 import React, { Component,Fragment } from 'react'
 import { Tabs, TabList, TabPanel, Tab } from 'react-tabs';
+import { createDesigner } from '../../services/api'
+import { ToastContainer, toast } from 'react-toastify';
 
 export class Tabset_user extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            activeShow: true,
+            startDate: new Date(),
+            firstName: '',
+            lastName:'',
+            email: '',
+            password: '',
+            rePassword: ''
+        }
+        this.handleChange = this.handleChange.bind(this)
+    }
+
+    // handle change
+    handleChange(e) {
+        this.setState({
+            [e.target.name]: e.target.value
+        });
+    }
+
+    // handle designer form submit
+    handleSubmit = (e) => {
+        e.preventDefault();
+
+        let {email, password, firstName, lastName, rePassword} = this.state
+
+        if(password === rePassword) {
+
+            createDesigner(email, password, firstName, lastName).then(response =>{
+ 
+                if(response.data) {
+                    
+                    if(response.data.code === "ER_DUP_ENTRY") {
+                        toast.error("Designer Already Exist!")
+                    }
+                    else {
+                        toast.success("New Designer Successfully Created!")
+                    }
+                }
+                else {
+                    toast.error("Something went wrong!")
+                }
+                
+            }).catch(err => {
+                toast.error("Something went wrong!")
+            })
+        }
+        else {
+            toast.error("Password does not match!")
+        }
+        
+    }
     render() {
         return (
             <Fragment>
                 <Tabs>
                     <TabList className="nav nav-tabs tab-coupon" >
                         <Tab className="nav-link">Account</Tab>
-                        <Tab className="nav-link">Permission</Tab>
+                        {/* <Tab className="nav-link">Permission</Tab> */}
                     </TabList>
                     <TabPanel>
-                        <form className="needs-validation user-add" noValidate="">
+                        <form className="needs-validation user-add" onSubmit={this.handleSubmit} >
                             <h4>Account Details</h4>
                             <div className="form-group row">
                                 <label className="col-xl-3 col-md-4"><span>*</span> First Name</label>
-                                <input className="form-control col-xl-8 col-md-7" id="validationCustom0" type="text" required="" />
+                                <input className="form-control col-xl-8 col-md-7" id="validationCustom0" name="firstName" type="text" required onChange={this.handleChange}/>
                             </div>
                             <div className="form-group row">
                                 <label className="col-xl-3 col-md-4"><span>*</span> Last Name</label>
-                                <input className="form-control col-xl-8 col-md-7" id="validationCustom1" type="text" required="" />
+                                <input className="form-control col-xl-8 col-md-7" id="validationCustom1" name="lastName" type="text" required onChange={this.handleChange} />
                             </div>
                             <div className="form-group row">
                                 <label className="col-xl-3 col-md-4"><span>*</span> Email</label>
-                                <input className="form-control col-xl-8 col-md-7" id="validationCustom2" type="text" required="" />
+                                <input className="form-control col-xl-8 col-md-7" id="validationCustom2" name="email" type="text" required onChange={this.handleChange} />
                             </div>
                             <div className="form-group row">
                                 <label className="col-xl-3 col-md-4"><span>*</span> Password</label>
-                                <input className="form-control col-xl-8 col-md-7" id="validationCustom3" type="password" required="" />
+                                <input className="form-control col-xl-8 col-md-7" id="validationCustom3" name="password" type="password" required onChange={this.handleChange} />
                             </div>
                             <div className="form-group row">
                                 <label className="col-xl-3 col-md-4"><span>*</span> Confirm Password</label>
-                                <input className="form-control col-xl-8 col-md-7" id="validationCustom4" type="password" required="" />
+                                <input className="form-control col-xl-8 col-md-7" id="validationCustom4" name="rePassword" type="password" required onChange={this.handleChange}/>
+                            </div>
+                            <div className="form-group row pull-right">
+                                <input type="submit" className="btn btn-primary" value="Save" />
                             </div>
                         </form>
                     </TabPanel>
@@ -50,7 +109,7 @@ export class Tabset_user extends Component {
                                                     <input className="radio_animated" id="edo-ani1" type="radio" name="rdo-ani" />
                                                     Allow
                                                     </label>
-                                                <label className="d-block" >
+                                                <label cdemo designerlassName="d-block" >
                                                     <input className="radio_animated" id="edo-ani2" type="radio" name="rdo-ani" defaultChecked />
                                                     Deny
                                                 </label>
@@ -156,7 +215,9 @@ export class Tabset_user extends Component {
                                                     Allow
                                                                 </label>
                                                 <label className="d-block" >
-                                                    <input className="radio_animated" id="edo-ani14" type="radio" name="rdo-ani6" defaultChecked />
+                                                <div className="pull-right">
+                    <button type="button" className="btn btn-primary">Save</button>
+                </div>              <input className="radio_animated" id="edo-ani14" type="radio" name="rdo-ani6" defaultChecked />
                                                     Deny
                                                     </label>
                                             </div>
@@ -184,9 +245,10 @@ export class Tabset_user extends Component {
                         </form>
                     </TabPanel>
                 </Tabs>
-                <div className="pull-right">
+                {/* <div className="pull-right">
                     <button type="button" className="btn btn-primary">Save</button>
-                </div>
+                </div> */}
+                <ToastContainer />
             </Fragment>
         )
     }

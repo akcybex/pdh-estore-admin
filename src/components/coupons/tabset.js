@@ -2,13 +2,18 @@ import React, { Component,Fragment } from 'react';
 import { Tabs, TabList, TabPanel, Tab } from 'react-tabs';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { createCoupon } from '../../services/api'
+import { ToastContainer, toast } from 'react-toastify';
 
 export class Tabset extends Component {
     constructor(props) {
         super(props);
         this.state = {
             activeShow: true,
-            startDate: new Date()
+            startDate: new Date(),
+            title: '',
+            quantity: '',
+            code: ''
         }
         this.handleChange = this.handleChange.bind(this)
     }
@@ -17,11 +22,35 @@ export class Tabset extends Component {
         document.querySelector(".nav-link").classList.remove('show');
         event.target.classList.add('show');
     }
-    handleChange(date) {
+    handleChange(e) {
         this.setState({
-            startDate: date
+            // startDate: date
+            [e.target.name]: e.target.value
         });
     }
+
+        // handle login form submit
+        handleSubmit = (e) => {
+            e.preventDefault();
+    
+            let {title, code, quantity} = this.state
+  
+                createCoupon(title, code, quantity).then(response =>{
+
+                    if(response.data) {
+
+                        toast.success("New Coupon Successfully Created!")
+
+                    }
+                    else {
+                        toast.error("Something went wrong!")
+                    }
+                    
+                }).catch(err => {
+                    toast.error("Something went wrong!")
+                })
+
+        }
 
     render() {
         return (
@@ -29,26 +58,26 @@ export class Tabset extends Component {
                 <Tabs>
                     <TabList className="nav nav-tabs tab-coupon" >
                         <Tab className="nav-link" onClick={(e) => this.clickActive(e)}>General</Tab>
-                        <Tab className="nav-link" onClick={(e) => this.clickActive(e)}>Restriction</Tab>
-                        <Tab className="nav-link" onClick={(e) => this.clickActive(e)}>Usage</Tab>
+                        {/* <Tab className="nav-link" onClick={(e) => this.clickActive(e)}>Restriction</Tab>
+                        <Tab className="nav-link" onClick={(e) => this.clickActive(e)}>Usage</Tab> */}
                     </TabList>
 
                     <TabPanel>
                         <div className="tab-pane fade active show">
-                            <form className="needs-validation" noValidate="">
+                            <form className="needs-validation" onSubmit={this.handleSubmit}>
                                 <h4>General</h4>
                                 <div className="row">
                                     <div className="col-sm-12">
                                         <div className="form-group row">
-                                            <label className="col-xl-3 col-md-4"><span>*</span> Name</label>
-                                            <input className="form-control col-md-7" id="validationCustom0" type="text" required="" />
+                                            <label className="col-xl-3 col-md-4"><span>*</span> Title</label>
+                                            <input className="form-control col-md-7" id="validationCustom0" type="text" name="title" required onChange={this.handleChange}/>
                                         </div>
                                         <div className="form-group row">
                                             <label className="col-xl-3 col-md-4"><span>*</span> Code</label>
-                                            <input className="form-control col-md-7" id="validationCustom1" type="text" required="" />
+                                            <input className="form-control col-md-7" id="validationCustom1" type="text" name="code" required onChange={this.handleChange}/>
                                             <div className="valid-feedback">Please Provide a Valid Coupon Code.</div>
                                         </div>
-                                        <div className="form-group row">
+                                        {/* <div className="form-group row">
                                             <label className="col-xl-3 col-md-4">Start Date</label>
                                             <DatePicker
                                             selected={this.state.startDate}
@@ -61,8 +90,8 @@ export class Tabset extends Component {
                                                 selected={this.state.startDate}
                                                 onChange={this.handleChange}
                                             />
-                                        </div>
-                                        <div className="form-group row">
+                                        </div> */}
+                                        {/* <div className="form-group row">
                                             <label className="col-xl-3 col-md-4">Free Shipping</label>
                                             <div className="col-md-7 checkbox-space">
                                                 <label className="d-block">
@@ -70,20 +99,20 @@ export class Tabset extends Component {
                                                     Allow Free Shipping
                                                 </label>
                                             </div>
-                                        </div>
+                                        </div> */}
                                         <div className="form-group row">
-                                            <label className="col-xl-3 col-md-4">Quantity</label>
-                                            <input className="form-control col-md-7" type="number" required="" />
+                                            <label className="col-xl-3 col-md-4"><span>*</span> Quantity</label>
+                                            <input className="form-control col-md-7" type="number" name="quantity" required=""  onChange={this.handleChange}/>
                                         </div>
-                                        <div className="form-group row">
+                                        {/* <div className="form-group row">
                                             <label className="col-xl-3 col-md-4">Discount Type</label>
                                             <select className="custom-select col-md-7" required="">
                                                 <option value="">--Select--</option>
                                                 <option value="1">Percent</option>
                                                 <option value="2">Fixed</option>
                                             </select>
-                                        </div>
-                                        <div className="form-group row">
+                                        </div> */}
+                                        {/* <div className="form-group row">
                                             <label className="col-xl-3 col-md-4">Status</label>
                                             <div className="col-md-7 checkbox-space">
                                                 <label className="d-block">
@@ -91,8 +120,11 @@ export class Tabset extends Component {
                                                     Enable the Coupon
                                                 </label>
                                             </div>
-                                        </div>
+                                        </div> */}
                                     </div>
+                                </div>
+                                <div className="pull-right">
+                                    <input type="submit" className="btn btn-primary" value="Save" />
                                 </div>
                             </form>
                         </div>
@@ -140,9 +172,10 @@ export class Tabset extends Component {
                         </form>
                     </TabPanel>
                 </Tabs>
-                <div className="pull-right">
+                {/* <div className="pull-right">
                     <button type="button" className="btn btn-primary">Save</button>
-                </div>
+                </div> */}
+                <ToastContainer />
             </Fragment>
         )
     }

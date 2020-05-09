@@ -4,6 +4,7 @@ import { Navigation, Box, MessageSquare, Users, Briefcase, CreditCard, ShoppingC
 import CountUp from 'react-countup';
 import { Chart } from "react-google-charts";
 import CanvasJSReact from '../assets/canvas/canvasjs.react';
+import ls from 'local-storage'
 
 import { Pie, Doughnut, Bar, Line } from 'react-chartjs-2';
 import { 
@@ -26,6 +27,12 @@ var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
 export class Dashboard extends Component {
 
+    componentDidMount() {
+        console.log('user', ls.get('user'))
+        if(!ls.get('user')) {
+            this.props.history.push(`/`);
+        }
+    }
     render() {
 
         const lineData = {

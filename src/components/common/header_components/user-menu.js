@@ -1,8 +1,14 @@
 import React, { Component,Fragment } from 'react'
 import {Link} from 'react-router-dom'
+import ls from 'local-storage'
 //images import
 import man from '../../../assets/images/dashboard/man.png'
 export class User_menu extends Component {
+    _logOut = () => {
+        ls.remove('user');
+        window.location.reload();
+        console.log('logout')
+    }
     render() {
         return (
             <Fragment>
@@ -14,7 +20,7 @@ export class User_menu extends Component {
                         <ul className="profile-dropdown onhover-show-div p-20 profile-dropdown-hover">
                             <li><Link to={"/settings/profile"} ><i data-feather="user"></i>Edit Profile</Link></li>
                             <li><a href="javascript:void(0)"><i data-feather="settings"></i>Settings</a></li>
-                            <li><Link to={"/"}><i data-feather="log-out"></i>Logout</Link></li>
+                            <li><Link onClick={this._logOut}><i data-feather="log-out"></i>Logout</Link></li>
                         </ul>
                     </li>
             </Fragment>

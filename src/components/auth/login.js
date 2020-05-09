@@ -6,8 +6,16 @@ import Slider from 'react-slick';
 import stats from '../../assets/images/dashboard/stats.png';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import ls from 'local-storage' 
 
 export class Login extends Component {
+
+    constructor(props) {
+        super(props);
+        if(ls.get('user')) {
+            this.props.history.push(`/dashboard`);
+        }
+    }
     render() {
         var settings = {
             dots: true,

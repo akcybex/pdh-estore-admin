@@ -15,23 +15,30 @@ export const MENUITEMS = [
     },
     {
         title: 'Products', icon: Box, type: 'sub', active: false, children: [
-            {
-                title: 'Physical', type: 'sub', active: false, children: [
-                    { path: '/products/physical/category', title: 'Category', type: 'link' },
-                    { path: '/products/physical/sub-category', title: 'Sub Category', type: 'link' },
-                    { path: '/products/physical/product-list', title: 'Product List', type: 'link' },
-                    { path: '/products/physical/product-detail', title: 'Product Detail', type: 'link' },
-                    { path: '/products/physical/add-product', title: 'Add Product', type: 'link' },
-                ]
-            },
-            {
-                title: 'digital', type: 'sub', active: false, children: [
-                    { path: '/products/digital/digital-category', title: 'Category', type: 'link' },
-                    { path: '/products/digital/digital-sub-category', title: 'Sub Category', type: 'link' },
-                    { path: '/products/digital/digital-product-list', title: 'Product List', type: 'link' },
-                    { path: '/products/digital/digital-add-product', title: 'Add Product', type: 'link' },
-                ]
-            },
+            { path: '/products/category', title: 'Category', type: 'link' },
+            // { path: '/products/physical/sub-category', title: 'Sub Category', type: 'link' },
+            { path: '/products/product-list', title: 'Product List', type: 'link' },
+            // { path: '/products/physical/product-detail', title: 'Product Detail', type: 'link' },
+            { path: '/products/add-product', title: 'Add Product', type: 'link' },
+                
+            
+            // {
+            //     title: 'Physical', type: 'sub', active: false, children: [
+            //         { path: '/products/physical/category', title: 'Category', type: 'link' },
+            //         { path: '/products/physical/sub-category', title: 'Sub Category', type: 'link' },
+            //         { path: '/products/physical/product-list', title: 'Product List', type: 'link' },
+            //         { path: '/products/physical/product-detail', title: 'Product Detail', type: 'link' },
+            //         { path: '/products/physical/add-product', title: 'Add Product', type: 'link' },
+            //     ]
+            // },
+            // {
+            //     title: 'digital', type: 'sub', active: false, children: [
+            //         { path: '/products/digital/digital-category', title: 'Category', type: 'link' },
+            //         { path: '/products/digital/digital-sub-category', title: 'Sub Category', type: 'link' },
+            //         { path: '/products/digital/digital-product-list', title: 'Product List', type: 'link' },
+            //         { path: '/products/digital/digital-add-product', title: 'Add Product', type: 'link' },
+            //     ]
+            // },
         ]
     },
     {
@@ -60,19 +67,19 @@ export const MENUITEMS = [
             { path: '/users/list-user', title: 'User List', type: 'link' },
         ]
     },
-    {
-        title: 'Vendors', icon: Users, type: 'sub', active: false, children: [
-            { path: '/vendors/list_vendors', title: 'Vendor List', type: 'link' },
-            { path: '/vendors/create-vendors', title: 'Create Vendor', type: 'link' },
-        ]
-    },
+    // {
+    //     title: 'Vendors', icon: Users, type: 'sub', active: false, children: [
+    //         { path: '/vendors/list_vendors', title: 'Vendor List', type: 'link' },
+    //         { path: '/vendors/create-vendors', title: 'Create Vendor', type: 'link' },
+    //     ]
+    // },
     {
         title: 'Invoice',path:'/invoice', icon: Archive, type: 'link', active: false
     },
     {
         title: 'Reports',path:'/reports/report', icon: BarChart, type: 'link', active: false
     },
-    {
-        title: 'Settings', path: '/settings/profile', icon: Settings, type: 'link', active: false
-    },
+    // {
+    //     title: 'Settings', path: '/settings/profile', icon: Settings, type: 'link', active: false
+    // },
 ]

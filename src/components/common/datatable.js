@@ -3,6 +3,7 @@ import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { delCoupon, delUser } from '../../services/api'
 
 
 export class Datatable extends Component {
@@ -28,14 +29,39 @@ export class Datatable extends Component {
     }
 
     handleRemoveRow = () => {
+        const { user } = this.props;
         const selectedValues = this.state.checkedValues;
-        const updatedData = this.state.myData.filter(function (el) {
-            return selectedValues.indexOf(el.id) < 0;
-        });
-        this.setState({
-            myData: updatedData
-        })
-        toast.success("Successfully Deleted !")
+        if(user === true) {
+
+            delUser(selectedValues);
+            const updatedData = this.state.myData.filter(function (el) {
+                return selectedValues.indexOf(el.id) < 0;
+            });
+            this.setState({
+                myData: updatedData
+            })
+            toast.success('User Successfully Deleted!')
+            
+        }
+        else {
+
+            delCoupon(selectedValues);
+            const updatedData = this.state.myData.filter(function (el) {
+                return selectedValues.indexOf(el.id) < 0;
+            });
+            this.setState({
+                myData: updatedData
+            })
+            toast.success('Coupon Successfully Deleted!')    
+        }
+
+        // const updatedData = this.state.myData.filter(function (el) {
+        //     return selectedValues.indexOf(el.id) < 0;
+        // });
+        // this.setState({
+        //     myData: updatedData
+        // })
+        // toast.success("Successfully Deleted !")
     };
 
     renderEditable = (cellInfo) => {
@@ -125,35 +151,35 @@ export class Datatable extends Component {
                 }
             )
         } else {
-            columns.push(
-                {
-                    Header: <b>Action</b>,
-                    id: 'delete',
-                    accessor: str => "delete",
-                    Cell: (row) => (
-                        <div>
-                            <span onClick={() => {
-                                if (window.confirm('Are you sure you wish to delete this item?')) {
-                                    let data = myData;
-                                    data.splice(row.index, 1);
-                                    this.setState({ myData: data });
-                                }
-                                toast.success("Successfully Deleted !")
+        //     columns.push(
+        //         {
+        //             Header: <b>Action</b>,
+        //             id: 'delete',
+        //             accessor: str => "delete",
+        //             Cell: (row) => (
+        //                 <div>
+        //                     <span onClick={() => {
+        //                         if (window.confirm('Are you sure you wish to delete this item?')) {
+        //                             let data = myData;
+        //                             data.splice(row.index, 1);
+        //                             this.setState({ myData: data });
+        //                         }
+        //                         toast.success("Successfully Deleted !")
 
-                            }}>
-                                <i className="fa fa-trash" style={{ width: 35, fontSize: 20, padding: 11, color: '#e4566e' }}
-                                ></i>
-                            </span>
+        //                     }}>
+        //                         <i className="fa fa-trash" style={{ width: 35, fontSize: 20, padding: 11, color: '#e4566e' }}
+        //                         ></i>
+        //                     </span>
 
-                        <span><i className="fa fa-pencil" style={{ width: 35, fontSize: 20, padding: 11, color:'rgb(40, 167, 69)' }}></i></span>
-                    </div>
-                ),
-                style: {
-                    textAlign: 'center'
-                },
-                sortable: false
-            }
-        )
+        //                 {/* <span><i className="fa fa-pencil" style={{ width: 35, fontSize: 20, padding: 11, color:'rgb(40, 167, 69)' }}></i></span> */}
+        //             </div>
+        //         ),
+        //         style: {
+        //             textAlign: 'center'
+        //         },
+        //         sortable: false
+        //     }
+        // )
         }
 
         return (

@@ -4,27 +4,78 @@ import Modal from 'react-responsive-modal';
 import 'react-toastify/dist/ReactToastify.css';
 import data from '../../../assets/data/category';
 import Datatable from '../../common/datatable';
+import { categoriesList } from '../../../services/api'
+import Loader from 'react-loader-spinner'
+import { ToastContainer, toast } from 'react-toastify';
 
 export class Category extends Component {
     constructor(props) {
         super(props);
         this.state = {
             open: false,
+            list: [],
+            cList: [],
+            loading: false,
         };
     }
     onOpenModal = () => {
-        this.setState({ open: true });
+        // this.setState({ open: true });
+        // toast.success("Successfully Deleted !")
+        // toast.error("Something went wrong while loading data!")
     };
 
     onCloseModal = () => {
         this.setState({ open: false });
     };
 
+    componentDidMount() {
+        
+        const category = categoriesList();
+        this._getCategories(category)
+ 
+        
+    }
+
+    _getCategories =  category => {
+        
+        this.setState({ loading: true }, async() => {
+            await category.then(async data => {
+
+                if(data.error) {
+                    this.setState({
+                        loading: false,
+                    })
+                    toast.error("Something went wrong while loading data!")
+                } else {
+                    await data.map(item => {
+                        const i = {
+                            id: item.id,
+                            name: item.name
+                        }
+
+                        this.setState({
+                            cList: [...this.state.cList, i]
+                        })
+                        
+                    })
+                    this.setState({
+                        loading: false,
+                        list: this.state.cList
+                    })
+                }
+            
+            }
+            )
+        })
+
+    }
+
     render() {
-        const { open } = this.state;
+        const { open, list, loading } = this.state;
+
         return (
             <Fragment>
-                <Breadcrumb title="Category" parent="Physical" />
+                <Breadcrumb title="Category" parent="Products" />
                 {/* <!-- Container-fluid starts--> */}
                 <div className="container-fluid">
                     <div className="row">
@@ -36,7 +87,7 @@ export class Category extends Component {
                                 <div className="card-body">
                                     <div className="btn-popup pull-right">
 
-                                        <button type="button" className="btn btn-primary" onClick={this.onOpenModal} data-toggle="modal" data-original-title="test" data-target="#exampleModal">Add Category</button>
+                                        {/* <button type="button" className="btn btn-primary" onClick={this.onOpenModal} data-toggle="modal" data-original-title="test" data-target="#exampleModal">Add Category</button> */}
                                         <Modal open={open} onClose={this.onCloseModal} >
                                             <div className="modal-header">
                                                 <h5 className="modal-title f-w-600" id="exampleModalLabel2">Add Physical Product</h5>
@@ -60,20 +111,36 @@ export class Category extends Component {
                                         </Modal>
                                     </div>
                                     <div className="clearfix"></div>
-                                    <div id="basicScenario" className="product-physical">
-                                        <Datatable
-                                            multiSelectOption={false}
-                                            myData={data} 
-                                            pageSize={10} 
-                                            pagination={true}
-                                            class="-striped -highlight" 
-                                        />
-                                    </div>
+                                    {loading ? 
+                                        <div
+                                            style={{
+                                                width: "100%",
+                                                height: "100",
+                                                display: "flex",
+                                                justifyContent: "center",
+                                                alignItems: "center"
+                                            }}>
+                                             <Loader type="ThreeDots" color="#FF8084" height="100" width="100" />
+
+                                        </div> : 
+                                        // <div id="basicScenario" className="product-physical">
+                                        <div id="basicScenario" className="product-physical">
+                                            <Datatable
+                                                multiSelectOption={false}
+                                                myData={list} 
+                                                pageSize={10} 
+                                                pagination={true}
+                                                class="-striped -highlight" 
+                                            />
+                                        </div>
+                                    }
+                                    
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <ToastContainer />                     
                 {/* <!-- Container-fluid Ends--> */}
             </Fragment>
         )
