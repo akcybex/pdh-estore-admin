@@ -12,10 +12,15 @@ export class Login extends Component {
 
     constructor(props) {
         super(props);
-        if(ls.get('user').is_admin === 1) {
-            this.props.history.push(`/dashboard`);
-        }else {
-            this.props.history.push(`/D/list-Portfolio`);
+        if(ls.get('user')) {
+            let user = ls.get('user')
+            if(user.is_admin === 1) {
+                this.props.history.push(`/dashboard`);
+            }
+            
+            else {
+                this.props.history.push(`/D/list-Portfolio`);
+            }
         }
     }
     render() {
