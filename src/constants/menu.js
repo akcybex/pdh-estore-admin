@@ -83,3 +83,13 @@ export const MENUITEMS = [
     //     title: 'Settings', path: '/settings/profile', icon: Settings, type: 'link', active: false
     // },
 ]
+
+export const DMENUITEMS = [
+    {
+        path: '/D/list-Portfolio', title: 'Portfolio', icon: UserPlus, type: 'link', badgeType: 'primary', active: false
+    },
+    {
+        path: '/D/create-portfolio', title: 'Add Portfolio', icon: UserPlus, type: 'link', badgeType: 'primary', active: false
+    },
+]
+

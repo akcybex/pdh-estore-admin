@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { Tabs, TabList, TabPanel, Tab } from 'react-tabs';
 import { User, Unlock } from 'react-feather';
 import { withRouter } from 'react-router-dom';
-import { userLogin } from '../../services/api'
+import { userLogin, designerLogin } from '../../services/api'
 import { ToastContainer, toast } from 'react-toastify';
 import ls from 'local-storage'
 import Loader from 'react-loader-spinner'
@@ -15,7 +15,8 @@ export class LoginTabset extends Component {
             startDate: new Date(),
             email: '',
             password: '',
-            loading: false
+            loading: false,
+
         }
         this.handleChange = this.handleChange.bind(this)
     }
@@ -36,7 +37,7 @@ export class LoginTabset extends Component {
         // this.props.history.push(`/dashboard`);
     }
 
-    // handle login form submit
+    // handle admin login form submit
     handleSubmit = (e) => {
         e.preventDefault();
 
@@ -50,9 +51,20 @@ export class LoginTabset extends Component {
                     this.setState({
                         loading: false,
                     })
-                    ls.set('user', response.data[0])
-                    toast.success("User Successfully Logged In")
-                    this.props.history.push(`/dashboard`);
+                    console.log('rez => ', response)
+                    if(response.data[0].is_admin === 1) {
+
+                        ls.set('user', response.data[0])
+                        this.props.history.push(`/dashboard`);
+
+                    } else {
+                        this.setState({
+                            loading: false,
+                        })
+                        toast.error("Email or Password Invalid!")
+                    }
+
+                    
                 }
                 else {
                     this.setState({
@@ -70,6 +82,52 @@ export class LoginTabset extends Component {
         })
         
     }
+
+    // handle designer login form submit
+    _handleSubmit = (e) => {
+        e.preventDefault();
+    
+        let {email, password} = this.state
+    
+        this.setState({ loading: true }, async() => {
+    
+            await designerLogin(email, password).then(response =>{
+    
+                if(response.data.length > 0) {
+                    this.setState({
+                        loading: false,
+                    })
+                    console.log('rez => ', response)
+                    if (response.data[0].is_admin === 2) {
+    
+                        ls.set('user', response.data[0])
+                        this.props.history.push(`/D/list-Portfolio`);
+    
+                    } else {
+                        this.setState({
+                            loading: false,
+                        })
+                        toast.error("Email or Password Invalid!")
+                    }
+    
+                }
+                else {
+                    this.setState({
+                        loading: false,
+                    })
+                    toast.error("Email or Password Invalid!")
+                }
+                    
+            }).catch(err => {
+                this.setState({
+                    loading: false,
+                })
+                toast.error("Something went wrong!")
+            })
+        })
+            
+    }
+
     render() {
         let { loading } = this.state
         return (
@@ -77,12 +135,57 @@ export class LoginTabset extends Component {
                     <Fragment>
                         <Tabs>
                             <TabList className="nav nav-tabs tab-coupon" >
-                                <Tab className="nav-link" onClick={(e) => this.clickActive(e)}><User />Login</Tab>
-                                {/* <Tab className="nav-link" onClick={(e) => this.clickActive(e)}><Unlock />Register</Tab> */}
+                                <Tab className="nav-link" onClick={(e) => this.clickActive(e)}><User />Admin</Tab>
+                                <Tab className="nav-link" onClick={(e) => this.clickActive(e)}><User />Designers</Tab>
                             </TabList>
 
                             <TabPanel>
                                 <form className="form-horizontal auth-form" onSubmit={this.handleSubmit}>
+                                    <div className="form-group">
+                                        <input required name="email" type="email" className="form-control" placeholder="Email" id="exampleInputEmail1" onChange={this.handleChange} />
+                                    </div>
+                                    <div className="form-group">
+                                        <input required name="password" type="password" className="form-control" placeholder="Password" onChange={this.handleChange}/>
+                                    </div>
+   
+                                    {/* <div className="form-terms">
+                                        <div className="custom-control custom-checkbox mr-sm-2">
+                                            <input type="checkbox" className="custom-control-input" id="customControlAutosizing" />
+                                            <label className="d-block">
+                                                        <input className="checkbox_animated" id="chk-ani2" type="checkbox" />
+                                                            Reminder Me <span className="pull-right"> <a href="#" className="btn btn-default forgot-pass p-0">lost your password</a></span>
+                                                    </label>
+                                        </div>
+                                    </div> */}
+                                    <div className="form-button">
+                                        <button className="btn btn-primary" type="submit" >Login</button>
+                                    </div>
+                                    {loading &&
+                                        <div
+                                            style={{
+                                                width: "100%",
+                                                height: "100",
+                                                display: "flex",
+                                                justifyContent: "center",
+                                                alignItems: "center"
+                                            }}>
+                                             <Loader type="ThreeDots" color="#FF8084" height="100" width="100" />
+
+                                        </div>
+                                    }
+                                    {/* <div className="form-footer">
+                                        <span>Or Login up with social platforms</span>
+                                        <ul className="social">
+                                            <li><a className="fa fa-facebook" href=""></a></li>
+                                            <li><a className="fa fa-twitter" href=""></a></li>
+                                            <li><a className="fa fa-instagram" href=""></a></li>
+                                            <li><a className="fa fa-pinterest" href=""></a></li>
+                                        </ul>
+                                    </div> */}
+                                </form>
+                            </TabPanel>
+                            <TabPanel>
+                                <form className="form-horizontal auth-form" onSubmit={this._handleSubmit}>
                                     <div className="form-group">
                                         <input required name="email" type="email" className="form-control" placeholder="Email" id="exampleInputEmail1" onChange={this.handleChange} />
                                     </div>

@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import PrivateRoute from './routes/PrivateRoute'
 import './index.scss';
 import App from './components/app';
 import { ScrollContext } from 'react-router-scroll-4';
 
 // Components
 import Dashboard from './components/dashboard';
+// import DashboardRoute  from './routes/PrivateRoute'
 
 // Products physical
 import Category from './components/products/physical/category';
@@ -32,6 +34,8 @@ import Create_coupons from './components/coupons/create-coupons';
 import Media from './components/media/media';
 import List_designer from './components/Designers/list-designer';
 import Create_designer from './components/Designers/create-designer';
+import Portfolio from './components/Designers/list-portfolio';
+import Add_portfolio from './components/Designers/add-portfolio';
 import List_user from './components/users/list-user';
 import List_vendors from './components/vendors/list-vendors';
 import Create_vendors from './components/vendors/create.vendors';
@@ -44,6 +48,13 @@ import ls from 'local-storage'
 
 
 class Root extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            user: ls.get('user')
+        }
+    }
     render() {
         return (
             <BrowserRouter basename={'/'}>
@@ -54,11 +65,12 @@ class Root extends Component {
                         <Route exact path={"/auth/login"} component={Login} />
                         
                         <App>
-                            <Route path={"/dashboard"} component={Dashboard} />
-
-                            <Route path={"/products/category"} component={Category} />
-                            <Route path={"/products/product-list"} component={Product_list} />
-                            <Route path={"/products/add-product"} component={Add_product} />
+                            
+                            <PrivateRoute path="/dashboard" component={Dashboard} />
+                            
+                            <PrivateRoute path="/products/category" component={Category} />
+                            <PrivateRoute path="/products/product-list" component={Product_list} />
+                            <PrivateRoute path="/products/add-product" component={Add_product} />
                                 
                             {/* <Route path={"/products/physical/category"} component={Category} />
                             <Route path={"/products/physical/sub-category"} component={Sub_category} />
@@ -71,29 +83,32 @@ class Root extends Component {
                             <Route path={"/products/digital/digital-product-list"} component={Digital_pro_list} />
                             <Route path={"/products/digital/digital-add-product"} component={Digital_add_pro} /> */}
 
-                            <Route path={"/sales/orders"} component={Orders} />
-                            <Route path={"/sales/transactions"} component={Transactions_sales} />
+                            <PrivateRoute path="/sales/orders" component={Orders} />
+                            <PrivateRoute path="/sales/transactions" component={Transactions_sales} />
 
-                            <Route path={"/coupons/list-coupons"} component={ListCoupons} />
-                            <Route path={"/coupons/create-coupons"} component={Create_coupons} />
+                            <PrivateRoute path="/coupons/list-coupons" component={ListCoupons} />
+                            <PrivateRoute path="/coupons/create-coupons" component={Create_coupons} />
 
-                            <Route path={"/media"} component={Media} />
+                            <PrivateRoute path="/media" component={Media} />
 
-                            <Route path={"/Designers/list-designer"} component={List_designer} />
-                            <Route path={"/Designers/create-designer"} component={Create_designer} />
+                            <PrivateRoute path="/Designers/list-designer" component={List_designer} />
+                            <PrivateRoute path="/Designers/create-designer" component={Create_designer} />
 
-                            <Route path={"/users/list-user"} component={List_user} />
+                            <PrivateRoute path="/D/list-Portfolio" component={Portfolio} />
+                            <PrivateRoute path="/D/create-portfolio" component={Add_portfolio} />
+
+                            <PrivateRoute path="/users/list-user" component={List_user} />
 
                             {/* <Route path={"/vendors/list_vendors"} component={List_vendors} />
                             <Route path={"/vendors/create-vendors"} component={Create_vendors} /> */}
 
-                            <Route path={"/reports/report"} component={Reports} />
+                            <PrivateRoute path="/reports/report" component={Reports} />
 
                             {/* <Route path={"/settings/profile"} component={Profile} /> */}
 
-                            <Route path={"/invoice"} component={Invoice} />
+                            <PrivateRoute path="/invoice" component={Invoice} />
 
-                            <Route path={"/data-table"} component={Datatable} />
+                            <PrivateRoute path="/data-table" component={Datatable} />
 
                         </App>
                         

@@ -28,10 +28,7 @@ var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 export class Dashboard extends Component {
 
     componentDidMount() {
-        console.log('user', ls.get('user'))
-        if(!ls.get('user')) {
-            this.props.history.push(`/`);
-        }
+    
     }
     render() {
 

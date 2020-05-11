@@ -3,7 +3,7 @@ import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { delCoupon, delUser } from '../../services/api'
+import { delCoupon, delUser, delPortfolio } from '../../services/api'
 
 
 export class Datatable extends Component {
@@ -29,7 +29,7 @@ export class Datatable extends Component {
     }
 
     handleRemoveRow = () => {
-        const { user } = this.props;
+        const { user, portfolio } = this.props;
         const selectedValues = this.state.checkedValues;
         if(user === true) {
 
@@ -45,14 +45,27 @@ export class Datatable extends Component {
         }
         else {
 
-            delCoupon(selectedValues);
-            const updatedData = this.state.myData.filter(function (el) {
-                return selectedValues.indexOf(el.id) < 0;
-            });
-            this.setState({
-                myData: updatedData
-            })
-            toast.success('Coupon Successfully Deleted!')    
+            if (portfolio) {
+                delPortfolio(selectedValues);
+                const updatedData = this.state.myData.filter(function (el) {
+                    return selectedValues.indexOf(el.id) < 0;
+                });
+                this.setState({
+                    myData: updatedData
+                })
+                toast.success('Portfolio Successfully Deleted!') 
+
+            }else {
+                delCoupon(selectedValues);
+                const updatedData = this.state.myData.filter(function (el) {
+                    return selectedValues.indexOf(el.id) < 0;
+                });
+                this.setState({
+                    myData: updatedData
+                })
+                toast.success('Coupon Successfully Deleted!') 
+            }
+    
         }
 
         // const updatedData = this.state.myData.filter(function (el) {

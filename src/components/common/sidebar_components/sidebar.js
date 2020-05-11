@@ -1,7 +1,8 @@
 import React, { Component, Fragment } from 'react'
 import User_panel from './user-panel';
 import { Link } from 'react-router-dom';
-import { MENUITEMS } from '../../../constants/menu';
+import { MENUITEMS, DMENUITEMS } from '../../../constants/menu';
+import ls from 'local-storage'
 
 // image import
 import logo from '../../../assets/images/dashboard/prohub-logo.png'
@@ -14,13 +15,21 @@ export class sidebar extends Component {
     };
 
     componentWillMount() {
-        this.setState({
-            mainmenu: MENUITEMS
-        })
+        if(ls.get('user').is_admin === 2) {
+            this.setState({
+                mainmenu: DMENUITEMS
+            })
+        } else {
+            this.setState({
+                mainmenu: MENUITEMS
+            }) 
+        }
+        
     }
     componentDidMount() {
         var currentUrl = window.location.pathname;
 
+        
         this.state.mainmenu.filter(items => {
             if (!items.children) {
                 if (items.path === currentUrl)
@@ -41,33 +50,64 @@ export class sidebar extends Component {
 
     setNavActive(item) {
 
-        MENUITEMS.filter(menuItem => {
-            if (menuItem != item)
-                menuItem.active = false
-            if (menuItem.children && menuItem.children.includes(item))
-                menuItem.active = true
-            if (menuItem.children) {
-                menuItem.children.filter(submenuItems => {
-                    if (submenuItems != item) {
-                        submenuItems.active = false
-                    }
-                    if (submenuItems.children) {
-                        submenuItems.children.map(childItem => {
-                            childItem.active = false;
-                        })
-                        if (submenuItems.children.includes(item)) {
-                            submenuItems.active = true
-                            menuItem.active = true
+        if(ls.get('user').is_admin === 2) {
+            DMENUITEMS.filter(menuItem => {
+                if (menuItem != item)
+                    menuItem.active = false
+                if (menuItem.children && menuItem.children.includes(item))
+                    menuItem.active = true
+                if (menuItem.children) {
+                    menuItem.children.filter(submenuItems => {
+                        if (submenuItems != item) {
+                            submenuItems.active = false
                         }
-                    }
-                })
-            }
-        })
-        item.active = !item.active
-
-        this.setState({
-            mainmenu: MENUITEMS
-        })
+                        if (submenuItems.children) {
+                            submenuItems.children.map(childItem => {
+                                childItem.active = false;
+                            })
+                            if (submenuItems.children.includes(item)) {
+                                submenuItems.active = true
+                                menuItem.active = true
+                            }
+                        }
+                    })
+                }
+            })
+            item.active = !item.active
+    
+            this.setState({
+                mainmenu: DMENUITEMS
+            })
+        }
+        else {
+            MENUITEMS.filter(menuItem => {
+                if (menuItem != item)
+                    menuItem.active = false
+                if (menuItem.children && menuItem.children.includes(item))
+                    menuItem.active = true
+                if (menuItem.children) {
+                    menuItem.children.filter(submenuItems => {
+                        if (submenuItems != item) {
+                            submenuItems.active = false
+                        }
+                        if (submenuItems.children) {
+                            submenuItems.children.map(childItem => {
+                                childItem.active = false;
+                            })
+                            if (submenuItems.children.includes(item)) {
+                                submenuItems.active = true
+                                menuItem.active = true
+                            }
+                        }
+                    })
+                }
+            })
+            item.active = !item.active
+    
+            this.setState({
+                mainmenu: MENUITEMS
+            })
+        }
 
 
     }

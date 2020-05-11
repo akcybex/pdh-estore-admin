@@ -14,8 +14,9 @@ export const delUserUrl = `${baseUrl}user/delete`
 export const couponUrl = `${baseUrl}coupons`
 export const addCouponUrl = `${baseUrl}coupons/add`
 export const delCouponUrl = `${baseUrl}coupons/delete`
-
-
+export const addPortfolioUrl = `${baseUrl}portfolios/add`
+export const delPortfolioUrl = `${baseUrl}portfolios/delete`
+export const portfolioUrl = `${baseUrl}portfolios`
 // user login
 export const userLogin = async (email, password) => {
 
@@ -26,6 +27,22 @@ export const userLogin = async (email, password) => {
             email: email,
             password: password,
             is_admin: 1
+        }),
+    });
+    return result;
+    
+}
+
+// designer login
+export const designerLogin = async (email, password) => {
+
+    const result = await axios({
+        method: 'post',
+        url: `${loginUrl}`,
+        data: qs.stringify({
+            email: email,
+            password: password,
+            is_admin: 2
         }),
     });
     return result;
@@ -157,10 +174,67 @@ export const createDesigner = async (email, password, firstName, lastName) => {
     
 }
 
+// add new Portfolio
+export const addPortfolio = async (portfolio) => {
+
+    const fd = new FormData();
+    fd.append('title', portfolio.title)
+    fd.append('description', portfolio.content)
+    fd.append('user_id', portfolio.id)
+    
+    await portfolio.images.forEach(item => {
+                
+        fd.append('images',item)
+        
+    })
+
+    const result = await axios({
+        method: 'post',
+        url: `${addPortfolioUrl}`,
+        headers: {
+            "Content-Type": "multipart/form-data"
+        },
+        data: fd
+    });
+    return result;
+    
+}
+
+// delete portfolio
+export const delPortfolio = async (portfolio_id) => {
+
+    portfolio_id.forEach(async id => {
+        
+        await axios({
+            method: 'post',
+            url: `${delPortfolioUrl}`,
+            data: qs.stringify({
+                portfolio_id: id
+            }),
+        });
+        // return result;
+    })
+    
+}
+
+// get portfolio
+export const getPortfolio = async (user_id) => {
+
+        
+    const result = await axios({
+        method: 'get',
+        url: `${portfolioUrl}`,
+        params: {
+            user_id: user_id
+        },
+    });
+    return result;
+    
+}
+
 // delete user
 export const delUser = async (user_id) => {
 
-    console.log('user => ', user_id)
 
     user_id.forEach(async id => {
         
@@ -238,8 +312,6 @@ export const createCoupon = async (title, code, discount) => {
 
 // delete coupon
 export const delCoupon = async (coupon_id) => {
-
-    console.log('cop => ', coupon_id)
 
     coupon_id.forEach(async id => {
         
