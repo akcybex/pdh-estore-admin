@@ -26,8 +26,7 @@ export class ListCoupons extends Component {
         
         this.setState({ loading: true }, async() => {
             await coupons.then(async data => {
-                console.log('data', data)
-                console.log('error', data.error)
+
                 if(data.error) {
                     this.setState({
                         loading: false,

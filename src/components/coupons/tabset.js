@@ -37,7 +37,7 @@ export class Tabset extends Component {
   
                 createCoupon(title, code, quantity).then(response =>{
 
-                    if(response.data) {
+                    if(response.status === 200) {
 
                         toast.success("New Coupon Successfully Created!")
 

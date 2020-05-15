@@ -159,8 +159,8 @@ export class Add_product extends Component {
         else {
             this.setState({ isActive: true }, async() => {
                 await addProduct({ title, price, categoryId, content, images, size }).then(response => {
-                    console.log(response)
-                    if(response.data) {
+
+                    if(response.status === 200) {
                         this.setState({
                             isActive: false,
                             images: []

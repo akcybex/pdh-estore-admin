@@ -36,14 +36,10 @@ export class Tabset_user extends Component {
 
             createDesigner(email, password, firstName, lastName).then(response =>{
  
-                if(response.data) {
+                if(response.status === 200) {
                     
-                    if(response.data.code === "ER_DUP_ENTRY") {
-                        toast.error("Designer Already Exist!")
-                    }
-                    else {
-                        toast.success("New Designer Successfully Created!")
-                    }
+                    toast.success("New Designer Successfully Created!")
+                   
                 }
                 else {
                     toast.error("Something went wrong!")

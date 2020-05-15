@@ -70,7 +70,7 @@ export class Product_list extends Component {
 
     _removeProduct(product_id) {
         delProduct(product_id).then(res => {
-            console.log(res)
+
             if(res.data) {
                 toast.success('Product Successfully Deleted!')
                 //updating product list
@@ -89,7 +89,7 @@ export class Product_list extends Component {
     }
     render() {
         const { list, loading } = this.state;
-        console.log('list => ', list)
+     
         return (
             <Fragment>
                 <Breadcrumb title="Product List" parent="Products" />
