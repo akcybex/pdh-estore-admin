@@ -193,7 +193,7 @@ export class Add_product extends Component {
                 <Breadcrumb title="Add Product" parent="Products" />
 
                 <div className="container-fluid">
-                    <div className="row">
+                <div className="row">
                         <div className="col-sm-12">
                             <div className="card">
                                 <div className="card-header">

@@ -17,6 +17,9 @@ export const delCouponUrl = `${baseUrl}coupons/delete`
 export const addPortfolioUrl = `${baseUrl}portfolios/add`
 export const delPortfolioUrl = `${baseUrl}portfolios/delete`
 export const portfolioUrl = `${baseUrl}portfolios`
+export const orderUrl = `${baseUrl}orders`
+export const updateOrderUrl = `${baseUrl}orders/update`
+
 // user login
 export const userLogin = async (email, password) => {
 
@@ -326,5 +329,42 @@ export const delCoupon = async (coupon_id) => {
         // return result;
     })
     
+    
+}
+
+// getting order list
+export const orderList = async() => {
+    const result = await axios.get(orderUrl).then(({ data }) => 
+        {
+            if(data.fatal) {
+               return {
+                    error: true,
+                }
+            }
+            else {
+                return data;
+            }
+            
+        }).catch(err => (
+            {
+                error: true
+            }
+        ));
+
+    return result;
+}
+
+// create new Coupon
+export const updateOrder = async (id, status) => {
+
+    const result = await axios({
+        method: 'post',
+        url: `${updateOrderUrl}`,
+        data: qs.stringify({
+            order_id: id,
+            status: status
+        }),
+    });
+    return result;
     
 }
