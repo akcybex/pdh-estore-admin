@@ -27,7 +27,8 @@ export class Add_product extends Component {
             title: '',
             price: '',
             images: [],
-            isActive: false
+            isActive: false,
+            preview: one
         }
         this.onChange = this.onChange.bind(this);
         this._handleCategory = this._handleCategory.bind(this);
@@ -120,22 +121,24 @@ export class Add_product extends Component {
         let file = e.target.files[0];
         this.state.images.push(file);
 
-        const { dummyimgs } = this.state;
+        const { dummyimgs  } = this.state;
         
         reader.onloadend = () => {
             dummyimgs[i].img = reader.result;
+            //preview = reader.result;
             this.setState({
                 file: file,
                 dummyimgs,
+                preview: reader.result
             });
         }
         reader.readAsDataURL(file)
     }
 
     _handleCategory(e) {
-        
+        console.log('cat', e.target.value)
         this.setState({
-            category: e.target.value
+            categoryId: e.target.value
         })
     }
 
@@ -149,7 +152,7 @@ export class Add_product extends Component {
         e.preventDefault();
 
         let { title, price, categoryId, content, images, size } = this.state
-
+        console.log('categoryId', categoryId)
         if(!images.length > 0) {
             toast.error("Please Select atleast 1 image!")
         } 
@@ -163,7 +166,13 @@ export class Add_product extends Component {
                     if(response.status === 200) {
                         this.setState({
                             isActive: false,
-                            images: []
+                            images: [],
+                            dummyimgs: [
+                                { img: user },
+                                { img: user },
+                                { img: user },
+                            ],
+                            preview: one
                         })
                         toast.success("New Product added Successflly!")
                     }
@@ -184,7 +193,7 @@ export class Add_product extends Component {
     }
 
     render() {
-        const { loading, list, isActive } = this.state;
+        const { loading, list, isActive, preview } = this.state;
         return (
             <Fragment>
                 <Breadcrumb title="Add Product" parent="Products" />
@@ -214,7 +223,9 @@ export class Add_product extends Component {
                                                 <div className="add-product">
                                                     <div className="row">
                                                         <div className="col-xl-9 xl-50 col-sm-6 col-9">
-                                                            <img src={one} alt="" className="img-fluid image_zoom_1 blur-up lazyloaded" />
+                                                            
+                                                            <img src={preview} alt="" className="img-fluid image_zoom_1 blur-up lazyloaded" />
+                                                            
                                                         </div>
                                                         <div className="col-xl-3 xl-50 col-sm-6 col-3">
                                                             <ul className="file-upload-product">

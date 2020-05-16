@@ -23,7 +23,8 @@ export class Add_portfolio extends Component {
             content: '',
             title: '',
             images: [],
-            isActive: false
+            isActive: false,
+            preview: one
         }
         this.onChange = this.onChange.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -61,6 +62,7 @@ export class Add_portfolio extends Component {
             this.setState({
                 file: file,
                 dummyimgs,
+                preview: reader.result
             });
         }
         reader.readAsDataURL(file)
@@ -86,7 +88,13 @@ export class Add_portfolio extends Component {
                     if(response.data) {
                         this.setState({
                             isActive: false,
-                            images: []
+                            images: [],
+                            dummyimgs: [
+                                { img: user },
+                                { img: user },
+                                { img: user },
+                            ],
+                            preview: one
                         })
                         toast.success("New Portfolio added Successflly!")
                     }
@@ -107,7 +115,7 @@ export class Add_portfolio extends Component {
     }
 
     render() {
-        const { isActive } = this.state;
+        const { isActive, preview } = this.state;
         return (
             <Fragment>
                 <Breadcrumb title="Add Portfolio" parent="Portfolio" />
@@ -125,7 +133,7 @@ export class Add_portfolio extends Component {
                                                 <div className="add-product">
                                                     <div className="row">
                                                         <div className="col-xl-9 xl-50 col-sm-6 col-9">
-                                                            <img src={one} alt="" className="img-fluid image_zoom_1 blur-up lazyloaded" />
+                                                            <img src={preview} alt="" className="img-fluid image_zoom_1 blur-up lazyloaded" />
                                                         </div>
                                                         <div className="col-xl-3 xl-50 col-sm-6 col-3">
                                                             <ul className="file-upload-product">
