@@ -80,6 +80,36 @@ export const addProduct = async (product) => {
     
 }
 
+// add update Product
+export const updateProduct = async (product) => {
+
+    const fd = new FormData();
+    fd.append('name', product.title)
+    fd.append('description', product.content)
+    fd.append('price', product.price)
+    fd.append('size', product.size)
+    fd.append('category_id', product.categoryId)
+    fd.append('old_images', product.old_images)
+    fd.append('stock', product.stock)
+    
+    await product.images.forEach(item => {
+                
+        fd.append('images',item)
+        
+    })
+
+    const result = await axios({
+        method: 'post',
+        url: `${productUrl}/${product.id}/update`,
+        headers: {
+            "Content-Type": "multipart/form-data"
+        },
+        data: fd
+    });
+    return result;
+    
+}
+
 // getting single product
 export const singleProduct = async(id) => {
     const result = await axios.get(`${productUrl}/${id}`).then(({ data }) => 

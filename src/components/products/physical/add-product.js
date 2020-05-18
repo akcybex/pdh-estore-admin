@@ -32,7 +32,7 @@ export class Add_product extends Component {
         }
         this.onChange = this.onChange.bind(this);
         this._handleCategory = this._handleCategory.bind(this);
-        this._handleSize = this._handleSize.bind(this); 
+        // this._handleSize = this._handleSize.bind(this); 
         this.handleChange = this.handleChange.bind(this);
         this._handleFormSubmit = this._handleFormSubmit.bind(this);
     }
@@ -76,28 +76,28 @@ export class Add_product extends Component {
         })
 
     }
-    IncrementItem = () => {
-        this.setState(prevState => {
-            if (prevState.quantity < 9) {
-                return {
-                    quantity: prevState.quantity + 1
-                }
-            } else {
-                return null;
-            }
-        });
-    }
-    DecreaseItem = () => {
-        this.setState(prevState => {
-            if (prevState.quantity > 0) {
-                return {
-                    quantity: prevState.quantity - 1
-                }
-            } else {
-                return null;
-            }
-        });
-    }
+    // IncrementItem = () => {
+    //     this.setState(prevState => {
+    //         if (prevState.quantity < 9) {
+    //             return {
+    //                 quantity: prevState.quantity + 1
+    //             }
+    //         } else {
+    //             return null;
+    //         }
+    //     });
+    // }
+    // DecreaseItem = () => {
+    //     this.setState(prevState => {
+    //         if (prevState.quantity > 0) {
+    //             return {
+    //                 quantity: prevState.quantity - 1
+    //             }
+    //         } else {
+    //             return null;
+    //         }
+    //     });
+    // }
     handleChange = (event) => {
         this.setState({ [event.target.name]: event.target.value });
         
@@ -136,17 +136,16 @@ export class Add_product extends Component {
     }
 
     _handleCategory(e) {
-        console.log('cat', e.target.value)
         this.setState({
             categoryId: e.target.value
         })
     }
 
-    _handleSize(e) {
-        this.setState({
-            size: e.target.value
-        })
-    }
+    // _handleSize(e) {
+    //     this.setState({
+    //         size: e.target.value
+    //     })
+    // }
 
     _handleFormSubmit(e) {
         e.preventDefault();
@@ -278,7 +277,7 @@ export class Add_product extends Component {
                                                         </div>
                                                     </div>
                                                     <div className="form">
-                                                        <div className="form-group row">
+                                                        {/* <div className="form-group row">
                                                             <label className="col-xl-3 col-sm-4 mb-0" >Select Size :</label>
                                                             <div className="col-xl-8 col-sm-7">
                                                                 <select className="form-control digits" id="exampleFormControlSelect1" onChange={this._handleSize}>
@@ -289,7 +288,7 @@ export class Add_product extends Component {
                                                                     <option value="XL">Extra Large</option>
                                                                 </select>
                                                             </div>
-                                                        </div>
+                                                        </div> */}
                                                         {/* <div className="form-group row">
                                                             <label className="col-xl-3 col-sm-4 mb-0">Total Products :</label>
                                                             <fieldset className="qty-box ml-0">

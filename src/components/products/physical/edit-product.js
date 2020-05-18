@@ -4,7 +4,7 @@ import CKEditors from "react-ckeditor-component";
 import { AvField, AvForm } from 'availity-reactstrap-validation';
 import one from '../../../assets/images/pro3/1.jpg'
 import user from '../../../assets/images/user.png';
-import { categoriesList, singleProduct, addProduct } from '../../../services/api'
+import { categoriesList, singleProduct, updateProduct } from '../../../services/api'
 import Loader from 'react-loader-spinner'
 import { ToastContainer, toast } from 'react-toastify';
 
@@ -28,7 +28,9 @@ export class Edit_product extends Component {
             price: '',
             images: [],
             isActive: false,
-            preview: one
+            preview: one,
+            oldImg: [],
+            stock: ''
         }
         this.onChange = this.onChange.bind(this);
         this._handleCategory = this._handleCategory.bind(this);
@@ -68,7 +70,6 @@ export class Edit_product extends Component {
                     })
 
                     const product = singleProduct(this.state.id);
-                    console.log(this.state.id, ' => ',product)
                     this._getProduct(product)
                 }
             
@@ -82,7 +83,7 @@ export class Edit_product extends Component {
     _getProduct= product => {
         this.setState({ loading: true }, async() => {
             await product.then(async data => {
-                    console.log(data)
+
                 if(data.length === 0) {
                     this.setState({
                         loading: false,
@@ -94,7 +95,10 @@ export class Edit_product extends Component {
                     const content = data[0].description;
                     const price = data[0].price;
                     const categoryId = data[0].category_id;
-
+                    var stock = 0;
+                    if(!data[0].stock == null) {
+                        stock = data[0].stock
+                    }
                     const { dummyimgs  } = this.state;
                     switch(images.length) {
                         case 1: 
@@ -106,6 +110,8 @@ export class Edit_product extends Component {
                                 price,
                                 categoryId,
                                 loading: false,
+                                oldImg: images,
+                                stock
                             })
                             break;
                         case 2: 
@@ -118,6 +124,8 @@ export class Edit_product extends Component {
                                 price,
                                 categoryId,
                                 loading: false,
+                                oldImg: images,
+                                stock
                             })
                             break;
                         case 3: 
@@ -131,7 +139,11 @@ export class Edit_product extends Component {
                                 price,
                                 categoryId,
                                 loading: false,
+                                oldImg: images,
+                                stock
                             })
+                            break;
+                        default:
                             break;
                     }
 
@@ -143,7 +155,6 @@ export class Edit_product extends Component {
 
     handleChange = (event) => {
         this.setState({ [event.target.name]: event.target.value });
-        
     }
 
     onChange(evt) {
@@ -164,22 +175,24 @@ export class Edit_product extends Component {
         let file = e.target.files[0];
         this.state.images.push(file);
 
-        const { dummyimgs  } = this.state;
+        const { dummyimgs, oldImg  } = this.state;
         
         reader.onloadend = () => {
             dummyimgs[i].img = reader.result;
+            oldImg.splice(i, 1, '');
             //preview = reader.result;
             this.setState({
                 file: file,
                 dummyimgs,
-                preview: reader.result
+                preview: reader.result,
+                oldImg
             });
         }
         reader.readAsDataURL(file)
     }
 
     _handleCategory(e) {
-        console.log('cat', e.target.value)
+ 
         this.setState({
             categoryId: e.target.value
         })
@@ -194,30 +207,32 @@ export class Edit_product extends Component {
     _handleFormSubmit(e) {
         e.preventDefault();
 
-        let { title, price, categoryId, content, images, size } = this.state
-        console.log('categoryId', categoryId)
-        if(!images.length > 0) {
-            toast.error("Please Select atleast 1 image!")
-        } 
-        else if (content === '') {
+        let { title, price, categoryId, content, images, size, oldImg, stock, id } = this.state
+     
+        const filteredImg = oldImg.filter(function (el) {
+              return el !== "";
+        });
+        const old_images = filteredImg.join();
+        
+        if (content === '') {
             toast.error("Please add product description!")
         }
         else {
             this.setState({ isActive: true }, async() => {
-                await addProduct({ title, price, categoryId, content, images, size }).then(response => {
-
+                await updateProduct({ title, price, categoryId, content, images, size, old_images , oldImg, stock, id }).then(response => {
+ 
                     if(response.status === 200) {
                         this.setState({
                             isActive: false,
                             images: [],
-                            dummyimgs: [
-                                { img: user },
-                                { img: user },
-                                { img: user },
-                            ],
-                            preview: one
+                            // dummyimgs: [
+                            //     { img: user },
+                            //     { img: user },
+                            //     { img: user },
+                            // ],
+                            // preview: one
                         })
-                        toast.success("New Product added Successflly!")
+                        toast.success("Product updated Successflly!")
                     }
                     else {
                         this.setState({
@@ -245,8 +260,6 @@ export class Edit_product extends Component {
             price, 
             categoryId, 
             content, 
-            images, 
-            size 
         } = this.state;
 
         return (
@@ -348,19 +361,6 @@ export class Edit_product extends Component {
                                                     </div>
                                                     <div className="form">
                                                         <div className="form-group row">
-                                                            <label className="col-xl-3 col-sm-4 mb-0" >Select Size :</label>
-                                                            <div className="col-xl-8 col-sm-7">
-                                                                <select className="form-control digits" id="exampleFormControlSelect1" onChange={this._handleSize}>
-                                                                    <option value="XS">Extra Small</option>
-                                                                    <option value="S">Small</option>
-                                                                    <option value="M">Medium</option>
-                                                                    <option value="L">Large</option>
-                                                                    <option value="XL">Extra Large</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-
-                                                        <div className="form-group row">
                                                             <label className="col-xl-3 col-sm-4">Add Description :</label>
                                                             <div className="col-xl-8 col-sm-7 description-sm">
                                                                 <CKEditors
@@ -378,7 +378,7 @@ export class Edit_product extends Component {
                                                         </div>
                                                     </div>
                                                     <div className="offset-xl-3 offset-sm-4">
-                                                        <input type="submit" className="btn btn-primary" value="Add"/>
+                                                        <input type="submit" className="btn btn-primary" value="Update"/>
                                                         <button type="button" className="btn btn-light">Discard</button>
                                                     </div>
                                                     {isActive &&
