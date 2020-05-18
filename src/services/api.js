@@ -80,7 +80,7 @@ export const addProduct = async (product) => {
     
 }
 
-// add update Product
+// update Product
 export const updateProduct = async (product) => {
 
     const fd = new FormData();
