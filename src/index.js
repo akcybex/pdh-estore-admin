@@ -15,6 +15,7 @@ import Category from './components/products/physical/category';
 import Sub_category from './components/products/physical/sub-category';
 import Product_list from './components/products/physical/product-list';
 import Add_product from './components/products/physical/add-product';
+import Edit_product from './components/products/physical/edit-product'
 import Product_detail from './components/products/physical/product-detail';
 
 //Product Digital
@@ -71,6 +72,7 @@ class Root extends Component {
                             <PrivateRoute path="/products/category" component={Category} />
                             <PrivateRoute path="/products/product-list" component={Product_list} />
                             <PrivateRoute path="/products/add-product" component={Add_product} />
+                            <PrivateRoute path="/products/edit-product/:id" component={Edit_product} />
                                 
                             {/* <Route path={"/products/physical/category"} component={Category} />
                             <Route path={"/products/physical/sub-category"} component={Sub_category} />
@@ -104,7 +106,7 @@ class Root extends Component {
 
                             <PrivateRoute path="/reports/report" component={Reports} />
 
-                            {/* <Route path={"/settings/profile"} component={Profile} /> */}
+                            <PrivateRoute path={"/D/settings/profile"} component={Profile} />
 
                             <PrivateRoute path="/invoice" component={Invoice} />
 

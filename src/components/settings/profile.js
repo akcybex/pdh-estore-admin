@@ -1,10 +1,24 @@
 import React, { Component ,Fragment} from 'react'
-
 import designer from '../../assets/images/dashboard/designer.jpg';
 import Tabset_profile from './tabset-profile';
 import Breadcrumb from '../common/breadcrumb';
+import ls from 'local-storage'
 
 export class Profile extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            name: '',
+            designation: ''
+        }
+    }
+    componentDidMount() {
+        this.setState({
+            name: ls.get('user').name,
+            email: ls.get('user').email,
+
+        })
+    }
     render() {
         return (
             <Fragment>
@@ -16,18 +30,18 @@ export class Profile extends Component {
                             <div className="card-body">
                                 <div className="profile-details text-center">
                                     <img src={designer} alt="" className="img-fluid img-90 rounded-circle blur-up lazyloaded" />
-                                    <h5 className="f-w-600 f-16 mb-0">Muhammad Zeeshan</h5>
-                                    <span>mohammadzeeshan059@gmail.com</span>
+                                    <h5 className="f-w-600 f-16 mb-0">{this.state.name}</h5>
+                                    <span>{this.state.email}</span>
                                     <div className="social">
-                                        <div className="form-group btn-showcase">
+                                        {/* <div className="form-group btn-showcase">
                                             <button className="btn social-btn btn-fb d-inline-block"> <i className="fa fa-facebook"></i></button>
                                             <button className="btn social-btn btn-twitter d-inline-block"><i className="fa fa-google"></i></button>
                                             <button className="btn social-btn btn-google d-inline-block mr-0"><i className="fa fa-twitter"></i></button>
-                                        </div>
+                                        </div> */}
                                     </div>
                                 </div>
                                 <hr />
-                                <div className="project-status">
+                                {/* <div className="project-status">
                                     <h5 className="f-w-600 f-16">Employee Status</h5>
                                     <div className="media">
                                         <div className="media-body">
@@ -53,7 +67,7 @@ export class Profile extends Component {
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                     </div>

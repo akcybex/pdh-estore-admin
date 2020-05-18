@@ -1,15 +1,30 @@
 import React, { Component } from 'react';
 import { Tabs, TabList, TabPanel, Tab } from 'react-tabs';
 import {User,Settings} from 'react-feather'
+import ls from 'local-storage'
 
 export class Tabset_profile extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            name: '',
+            designation: ''
+        }
+    }
+    componentDidMount() {
+        this.setState({
+            name: ls.get('user').name,
+            email: ls.get('user').email,
+
+        })
+    }
     render() {
         return (
             <div>
                 <Tabs>
                     <TabList className="nav nav-tabs tab-coupon" >
                         <Tab className="nav-link"><User className="mr-2" />Profile</Tab>
-                        <Tab className="nav-link"><Settings className="mr-2" />Contact</Tab>
+                        {/* <Tab className="nav-link"><Settings className="mr-2" />Contact</Tab> */}
                     </TabList>
 
                     <TabPanel>
@@ -19,18 +34,18 @@ export class Tabset_profile extends Component {
                                 <table className="table table-responsive">
                                     <tbody>
                                         <tr>
-                                            <td>First Name:</td>
-                                            <td>Muhammad</td>
+                                            <td>Name:</td>
+                                            <td>{this.state.name}</td>
                                         </tr>
-                                        <tr>
+                                        {/* <tr>
                                             <td>Last Name:</td>
                                             <td>Zeeshan</td>
-                                        </tr>
+                                        </tr> */}
                                         <tr>
                                             <td>Email:</td>
-                                            <td>mohammadzeeshan@gmail.com</td>
+                                            <td>{this.state.email}</td>
                                         </tr>
-                                        <tr>
+                                        {/* <tr>
                                             <td>Gender:</td>
                                             <td>Male</td>
                                         </tr>
@@ -45,7 +60,7 @@ export class Tabset_profile extends Component {
                                         <tr>
                                             <td>Location:</td>
                                             <td>PAK</td>
-                                        </tr>
+                                        </tr> */}
                                     </tbody>
                                 </table>
                             </div>

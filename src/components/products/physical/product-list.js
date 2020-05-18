@@ -5,6 +5,7 @@ import { Edit, Trash2 } from 'react-feather'
 import { productsList, delProduct } from '../../../services/api'
 import Loader from 'react-loader-spinner'
 import { ToastContainer, toast } from 'react-toastify';
+import { Link } from 'react-router-dom'
 
 
 export class Product_list extends Component {
@@ -125,7 +126,7 @@ export class Product_list extends Component {
                                                                 <ul>
                                                                     <li>
                                                                         <button className="btn" type="button">
-                                                                            <Edit className="editBtn" />
+                                                                            <Link to={`/products/edit-product/${myData.id}`}><Edit className="editBtn" /></Link>
                                                                         </button>
                                                                     </li>
                                                                     <li>
@@ -148,11 +149,11 @@ export class Product_list extends Component {
                                                         <a> <h6 >{myData.name}</h6></a>
                                                         {/* <h4 >{myData.price} <del >{myData.discount_price}</del></h4> */}
                                                         <h4>${myData.price}</h4>
-                                                        <ul className="color-variant">
+                                                        {/* <ul className="color-variant">
                                                             <li className="bg-light0"></li>
                                                             <li className="bg-light1"></li>
                                                             <li className="bg-light2"></li>
-                                                        </ul>
+                                                        </ul> */}
                                                     </div>
                                                 </div>
                                             </div>

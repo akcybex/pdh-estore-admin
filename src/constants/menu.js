@@ -91,5 +91,8 @@ export const DMENUITEMS = [
     {
         path: '/D/create-portfolio', title: 'Add Portfolio', icon: UserPlus, type: 'link', badgeType: 'primary', active: false
     },
+    {
+        title: 'Settings', path: '/D/settings/profile', icon: Settings, type: 'link', active: false
+    },
 ]
 

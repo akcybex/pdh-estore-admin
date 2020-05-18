@@ -80,6 +80,28 @@ export const addProduct = async (product) => {
     
 }
 
+// getting single product
+export const singleProduct = async(id) => {
+    const result = await axios.get(`${productUrl}/${id}`).then(({ data }) => 
+        {
+            if(data.fatal) {
+               return {
+                    error: true,
+                }
+            }
+            else {
+                return data;
+            }
+            
+        }).catch(err => (
+            {
+                error: true
+            }
+        ));
+
+    return result;
+}
+
 // getting products list
 export const productsList = async() => {
     const result = await axios.get(productUrl).then(({ data }) => 
