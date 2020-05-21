@@ -31,6 +31,9 @@ import Transactions_sales from './components/sales/transactions-sales';
 import ListCoupons from './components/coupons/list-coupons';
 import Create_coupons from './components/coupons/create-coupons';
 
+// Chat
+import Message from './components/chat/index'
+
 //Pages
 import Media from './components/media/media';
 import List_designer from './components/Designers/list-designer';
@@ -98,6 +101,7 @@ class Root extends Component {
 
                             <PrivateRoute path="/D/list-Portfolio" component={Portfolio} />
                             <PrivateRoute path="/D/create-portfolio" component={Add_portfolio} />
+                            <PrivateRoute path="/D/message" component={Message} />
 
                             <PrivateRoute path="/users/list-user" component={List_user} />
 

@@ -2,7 +2,9 @@ import React, { Component,Fragment } from 'react'
 import SearchHeader from './searchHeader';
 import Notification from './notification';
 import User_menu from './user-menu';
+import { Link } from 'react-router-dom'
 import { AlignLeft, Maximize2, Bell, MessageSquare, MoreHorizontal } from 'react-feather';
+import ls from 'local-storage'
 
 //images
 import logo from '../../../assets/images/dashboard/prohub-logo.png'
@@ -13,7 +15,15 @@ export class Header extends Component {
         this.state = {
             sidebar: true,
             rightSidebar: true,
-            navMenus: false
+            navMenus: false,
+            showMessage: false
+        }
+    }
+    componentDidMount() {
+        if(ls.get('user').is_admin === 2) {
+            this.setState({
+                showMessage: true
+            })
         }
     }
     toggle() {
@@ -80,7 +90,9 @@ export class Header extends Component {
                                 <li className="onhover-dropdown"><Bell /><span className="badge badge-pill badge-primary pull-right notification-badge">3</span><span className="dot"></span>
                                     <Notification />
                                 </li>
-                                <li><a onClick={this.showRightSidebar}><MessageSquare /><span className="dot"></span></a></li>
+                                { this.state.showMessage &&
+                                <li><Link to={'/D/message'}><MessageSquare /><span className="dot"></span></Link></li>
+                                }
                                 <User_menu />
                             </ul>
                             <div className="d-lg-none mobile-toggle pull-right" onClick={() => this.toggle()}><MoreHorizontal /></div>
