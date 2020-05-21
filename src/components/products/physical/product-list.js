@@ -32,7 +32,7 @@ export class Product_list extends Component {
         
         this.setState({ loading: true }, async() => {
             await products.then(async data => {
-
+                
                 if(data.error) {
                     this.setState({
                         loading: false,
@@ -71,12 +71,13 @@ export class Product_list extends Component {
 
     _removeProduct(product_id) {
         delProduct(product_id).then(res => {
-
-            if(res.data) {
+            
+            if(res.data.affectedRows) {
                 toast.success('Product Successfully Deleted!')
                 //updating product list
                 this.setState({
-                    pList: []
+                    pList: [],
+                    list:[]
                 })
                 const products = productsList();
                 this._getProducts(products)
