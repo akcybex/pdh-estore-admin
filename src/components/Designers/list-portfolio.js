@@ -33,7 +33,6 @@ export class Portfolio extends Component {
     componentDidMount() {
 
         let { id } = this.state;
-        console.log('id => ', id)
         const portfolio = getPortfolio(id);
         this._getPortfolio(portfolio)
        
@@ -44,7 +43,7 @@ export class Portfolio extends Component {
         
         this.setState({ loading: true }, async() => {
             await portfolio.then(async response => {
-                console.log(response)
+
                 if(!response.error) {
                     await response.data.map(item => {
                         const i = {

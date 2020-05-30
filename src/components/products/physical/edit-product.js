@@ -30,7 +30,7 @@ export class Edit_product extends Component {
             isActive: false,
             preview: one,
             oldImg: [],
-            stock: ''
+            stock: 0
         }
         this.onChange = this.onChange.bind(this);
         this._handleCategory = this._handleCategory.bind(this);
@@ -83,7 +83,7 @@ export class Edit_product extends Component {
     _getProduct= product => {
         this.setState({ loading: true }, async() => {
             await product.then(async data => {
-
+  
                 if(data.length === 0) {
                     this.setState({
                         loading: false,
@@ -95,10 +95,10 @@ export class Edit_product extends Component {
                     const content = data[0].description;
                     const price = data[0].price;
                     const categoryId = data[0].category_id;
-                    var stock = 0;
-                    if(!data[0].stock == null) {
-                        stock = data[0].stock
-                    }
+                    var stock = data[0].stock;
+                    if(stock == null) {
+                        stock = 1
+                    } 
                     const { dummyimgs  } = this.state;
                     switch(images.length) {
                         case 1: 
@@ -260,6 +260,7 @@ export class Edit_product extends Component {
             price, 
             categoryId, 
             content, 
+            stock
         } = this.state;
 
         return (
@@ -271,7 +272,7 @@ export class Edit_product extends Component {
                         <div className="col-sm-12">
                             <div className="card">
                                 <div className="card-header">
-                                    <h5>Add Product</h5>
+                                    <h5>Edit Product</h5>
                                 </div>
                                 {loading ? 
                                         <div
@@ -343,6 +344,20 @@ export class Edit_product extends Component {
                                                                     required 
                                                                     onChange={this.handleChange} 
                                                                     value={price}/>
+                                                            </div>
+                                                            <div className="valid-feedback">Looks good!</div>
+                                                        </div>
+                                                        <div className="form-group mb-3 row">
+                                                            <label className="col-xl-3 col-sm-4 mb-0">Stock :</label>
+                                                            <div className="col-xl-8 col-sm-7">
+                                                                <AvField 
+                                                                    className="form-control mb-0" 
+                                                                    name="stock" 
+                                                                    id="validationCustom02" 
+                                                                    type="number" 
+                                                                    required 
+                                                                    onChange={this.handleChange} 
+                                                                    value={stock}/>
                                                             </div>
                                                             <div className="valid-feedback">Looks good!</div>
                                                         </div>

@@ -4,7 +4,7 @@ import CKEditors from "react-ckeditor-component";
 import { AvField, AvForm } from 'availity-reactstrap-validation';
 import one from '../../assets/images/pro3/1.jpg'
 import user from '../../assets/images/user.png';
-import { addPortfolio } from '../../services/api'
+import { addPortfolio, getPortfolio } from '../../services/api'
 import Loader from 'react-loader-spinner'
 import { ToastContainer, toast } from 'react-toastify';
 import ls from 'local-storage'
@@ -24,13 +24,20 @@ export class Add_portfolio extends Component {
             title: '',
             images: [],
             isActive: false,
-            preview: one
+            preview: one,
+            id: ls.get('user').id,
+            havingPortfolio: false
         }
         this.onChange = this.onChange.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this._handleFormSubmit = this._handleFormSubmit.bind(this);
     }
-    componentDidMount() {}
+    componentDidMount() {
+
+        let { id } = this.state;
+        const portfolio = getPortfolio(id);
+        this._getPortfolio(portfolio)
+    }
 
     handleChange = (event) => {
         this.setState({ [event.target.name]: event.target.value });
@@ -84,7 +91,7 @@ export class Add_portfolio extends Component {
 
             this.setState({ isActive: true }, async() => {
                 await addPortfolio({ title, content, images, id }).then(response => {
-                    console.log(response)
+     
                     if(response.data) {
                         this.setState({
                             isActive: false,
@@ -114,104 +121,151 @@ export class Add_portfolio extends Component {
         }
     }
 
+    _getPortfolio =  portfolio => {
+        
+        this.setState({ isActive: true }, async() => {
+            await portfolio.then(async response => {
+          
+                if(!response.error) {
+                    if(response.data.length > 0) {
+                        this.setState({
+                            isActive: false,
+                            havingPortfolio: true
+                        })
+                        toast.error("Seems to be you already have portfolio!")
+                    } else {
+                        this.setState({
+                            isActive: false,
+                            havingPortfolio: false
+                        })
+                    }
+                }
+                else {
+                    this.setState({
+                        isActive: false,
+                        havingPortfolio: true
+                    })
+                    toast.error("Something went wrong while checking data!")
+                } 
+            
+            })
+        })
+
+    }
+
     render() {
-        const { isActive, preview } = this.state;
+        const { isActive, preview, havingPortfolio } = this.state;
         return (
             <Fragment>
                 <Breadcrumb title="Add Portfolio" parent="Portfolio" />
+                {isActive ? 
+                    <div
+                        style={{
+                            width: "100%",
+                            height: "100",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center"
+                        }}
+                    >
+                        <Loader type="ThreeDots" color="#FF8084" height="100" width="100" />
+                    </div> :
+                    <div className="container-fluid">
 
-                <div className="container-fluid">
-                    <div className="row">
-                        <div className="col-sm-12">
-                            <div className="card">
-                                <div className="card-header">
-                                    <h5>Add Portfolio</h5>
-                                </div>
-                                    <div className="card-body">
-                                        <div className="row product-adding">
-                                            <div className="col-xl-5">
-                                                <div className="add-product">
-                                                    <div className="row">
-                                                        <div className="col-xl-9 xl-50 col-sm-6 col-9">
-                                                            <img src={preview} alt="" className="img-fluid image_zoom_1 blur-up lazyloaded" />
+                        {!havingPortfolio &&
+                            <div className="row">
+                                <div className="col-sm-12">
+                                    <div className="card">
+                                        <div className="card-header">
+                                            <h5>Add Portfolio</h5>
+                                        </div>
+                                            <div className="card-body">
+                                                <div className="row product-adding">
+                                                    <div className="col-xl-5">
+                                                        <div className="add-product">
+                                                            <div className="row">
+                                                                <div className="col-xl-9 xl-50 col-sm-6 col-9">
+                                                                    <img src={preview} alt="" className="img-fluid image_zoom_1 blur-up lazyloaded" />
+                                                                </div>
+                                                                <div className="col-xl-3 xl-50 col-sm-6 col-3">
+                                                                    <ul className="file-upload-product">
+                                                                        {
+                                                                            this.state.dummyimgs.map((res, i) => {
+                                                                                return (
+                                                                                    <li key={i}>
+                                                                                        <div className="box-input-file">
+                                                                                            <input className="upload" type="file" onChange={(e) => this._handleImgChange(e, i)} />
+                                                                                            <img src={res.img} style={{ width: 50, height: 50 }} />
+                                                                                            <a id="result1" onClick={(e) => this._handleSubmit(e.target.id)}></a>
+                                                                                        </div>
+                                                                                    </li>
+                                                                                )
+                                                                            })
+                                                                        }
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                        <div className="col-xl-3 xl-50 col-sm-6 col-3">
-                                                            <ul className="file-upload-product">
-                                                                {
-                                                                    this.state.dummyimgs.map((res, i) => {
-                                                                        return (
-                                                                            <li key={i}>
-                                                                                <div className="box-input-file">
-                                                                                    <input className="upload" type="file" onChange={(e) => this._handleImgChange(e, i)} />
-                                                                                    <img src={res.img} style={{ width: 50, height: 50 }} />
-                                                                                    <a id="result1" onClick={(e) => this._handleSubmit(e.target.id)}></a>
-                                                                                </div>
-                                                                            </li>
-                                                                        )
-                                                                    })
-                                                                }
-                                                            </ul>
-                                                        </div>
+                                                    </div>
+                                                    <div className="col-xl-7">
+                                                        <AvForm className="needs-validation add-product-form" onValidSubmit={this._handleFormSubmit} onInvalidSubmit={this.handleInvalidSubmit}>
+                                                            <div className="form form-label-center">
+                                                                <div className="form-group mb-3 row">
+                                                                    <label className="col-xl-3 col-sm-4 mb-0">Add title :</label>
+                                                                    <div className="col-xl-8 col-sm-7">
+                                                                        <AvField className="form-control" name="title" id="validationCustom01" type="text" required onChange={this.handleChange}/>
+                                                                    </div>
+                                                                    <div className="valid-feedback">Looks good!</div>
+                                                                </div>
+                                        
+                                                            </div>
+                                                            <div className="form">
+
+                                                                <div className="form-group row">
+                                                                    <label className="col-xl-3 col-sm-4">Add Description :</label>
+                                                                    <div className="col-xl-8 col-sm-7 description-sm">
+                                                                        <CKEditors
+                                                                            activeclassName="p10"
+                                                                            content={this.state.content}
+                                                                            //data="<p>Hello from CKEditor 5!</p>"
+                                                                            //onChange={ ( event, editor ) => console.log( { event, editor } ) }
+                                                                            events={{
+                                                                                // blur: this.onBlur,
+                                                                                // afterPaste: this.afterPaste,
+                                                                                change: this.onChange
+                                                                            }}
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div className="offset-xl-3 offset-sm-4">
+                                                                <input type="submit" className="btn btn-primary" value="Add"/>
+                                                                {/* <button type="button" className="btn btn-light">Discard</button> */}
+                                                            </div>
+                                                            {isActive &&
+                                                                <div
+                                                                    style={{
+                                                                        width: "100%",
+                                                                        height: "100",
+                                                                        display: "flex",
+                                                                        justifyContent: "center",
+                                                                        alignItems: "center"
+                                                                    }}>
+                                                                    <Loader type="ThreeDots" color="#FF8084" height="100" width="100" />
+
+                                                                </div>
+                                                            }
+                                                        </AvForm>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="col-xl-7">
-                                                <AvForm className="needs-validation add-product-form" onValidSubmit={this._handleFormSubmit} onInvalidSubmit={this.handleInvalidSubmit}>
-                                                    <div className="form form-label-center">
-                                                        <div className="form-group mb-3 row">
-                                                            <label className="col-xl-3 col-sm-4 mb-0">Add title :</label>
-                                                            <div className="col-xl-8 col-sm-7">
-                                                                <AvField className="form-control" name="title" id="validationCustom01" type="text" required onChange={this.handleChange}/>
-                                                            </div>
-                                                            <div className="valid-feedback">Looks good!</div>
-                                                        </div>
-                                
-                                                    </div>
-                                                    <div className="form">
-
-                                                        <div className="form-group row">
-                                                            <label className="col-xl-3 col-sm-4">Add Description :</label>
-                                                            <div className="col-xl-8 col-sm-7 description-sm">
-                                                                <CKEditors
-                                                                    activeclassName="p10"
-                                                                    content={this.state.content}
-                                                                    //data="<p>Hello from CKEditor 5!</p>"
-                                                                    //onChange={ ( event, editor ) => console.log( { event, editor } ) }
-                                                                    events={{
-                                                                        // blur: this.onBlur,
-                                                                        // afterPaste: this.afterPaste,
-                                                                        change: this.onChange
-                                                                    }}
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="offset-xl-3 offset-sm-4">
-                                                        <input type="submit" className="btn btn-primary" value="Add"/>
-                                                        <button type="button" className="btn btn-light">Discard</button>
-                                                    </div>
-                                                    {isActive &&
-                                                        <div
-                                                            style={{
-                                                                width: "100%",
-                                                                height: "100",
-                                                                display: "flex",
-                                                                justifyContent: "center",
-                                                                alignItems: "center"
-                                                            }}>
-                                                            <Loader type="ThreeDots" color="#FF8084" height="100" width="100" />
-
-                                                        </div>
-                                                    }
-                                                </AvForm>
-                                            </div>
-                                        </div>
+                                        
                                     </div>
-                                
+                                </div>
                             </div>
-                        </div>
+                        }
                     </div>
-                </div>
+                }
                 <ToastContainer /> 
             </Fragment>
         )

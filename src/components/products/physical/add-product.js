@@ -28,7 +28,8 @@ export class Add_product extends Component {
             price: '',
             images: [],
             isActive: false,
-            preview: one
+            preview: one,
+            stock: 0
         }
         this.onChange = this.onChange.bind(this);
         this._handleCategory = this._handleCategory.bind(this);
@@ -150,7 +151,7 @@ export class Add_product extends Component {
     _handleFormSubmit(e) {
         e.preventDefault();
 
-        let { title, price, categoryId, content, images, size } = this.state
+        let { title, price, categoryId, content, images, size, stock } = this.state
         console.log('categoryId', categoryId)
         if(!images.length > 0) {
             toast.error("Please Select atleast 1 image!")
@@ -160,7 +161,7 @@ export class Add_product extends Component {
         }
         else {
             this.setState({ isActive: true }, async() => {
-                await addProduct({ title, price, categoryId, content, images, size }).then(response => {
+                await addProduct({ title, price, categoryId, content, images, size, stock }).then(response => {
 
                     if(response.status === 200) {
                         this.setState({
@@ -260,6 +261,13 @@ export class Add_product extends Component {
                                                             <label className="col-xl-3 col-sm-4 mb-0">Price :</label>
                                                             <div className="col-xl-8 col-sm-7">
                                                                 <AvField className="form-control mb-0" name="price" id="validationCustom02" type="number" required onChange={this.handleChange} />
+                                                            </div>
+                                                            <div className="valid-feedback">Looks good!</div>
+                                                        </div>
+                                                        <div className="form-group mb-3 row">
+                                                            <label className="col-xl-3 col-sm-4 mb-0">Stock :</label>
+                                                            <div className="col-xl-8 col-sm-7">
+                                                                <AvField className="form-control mb-0" name="stock" id="validationCustom02" type="number" required onChange={this.handleChange} />
                                                             </div>
                                                             <div className="valid-feedback">Looks good!</div>
                                                         </div>

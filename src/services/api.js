@@ -61,6 +61,7 @@ export const addProduct = async (product) => {
     fd.append('price', product.price)
     fd.append('size', product.size)
     fd.append('category_id', product.categoryId)
+    fd.append('stock', product.stock)
     
     await product.images.forEach(item => {
                 
