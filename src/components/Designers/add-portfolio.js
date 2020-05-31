@@ -104,6 +104,7 @@ export class Add_portfolio extends Component {
                             preview: one
                         })
                         toast.success("New Portfolio added Successflly!")
+                        window.location.replace('/D/list-Portfolio')
                     }
                     else {
                         this.setState({

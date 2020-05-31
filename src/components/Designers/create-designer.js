@@ -6,7 +6,7 @@ export class Create_designer extends Component {
     render() {
         return (
             <Fragment>
-                <Breadcrumb title="Create User" parent="Users" />
+                <Breadcrumb title="Create Designer" parent="Designers" />
                 <div className="container-fluid">
                     <div className="row">
                         <div className="col-sm-12">

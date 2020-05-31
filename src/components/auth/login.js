@@ -23,6 +23,7 @@ export class Login extends Component {
             }
         }
     }
+    
     render() {
         var settings = {
             dots: true,

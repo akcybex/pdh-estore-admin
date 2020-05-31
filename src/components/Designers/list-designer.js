@@ -63,7 +63,7 @@ export class List_designer extends Component {
         const { list, loading } = this.state
         return (
             <Fragment>
-                <Breadcrumb title="User List" parent="Users" />
+                <Breadcrumb title="Designer List" parent="Designers" />
                 <div className="container-fluid">
                     <div className="card">
                         <div className="card-header">
@@ -71,7 +71,7 @@ export class List_designer extends Component {
                         </div>
                         <div className="card-body">
                             <div className="btn-popup pull-right">
-                                <Link to="/users/create-user" className="btn btn-secondary">Create Designer</Link>
+                                <Link to="/Designers/create-designer" className="btn btn-secondary">Create Designer</Link>
                             </div>
                             <div className="clearfix"></div>
                             {loading ? 

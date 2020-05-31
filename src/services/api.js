@@ -19,6 +19,7 @@ export const delPortfolioUrl = `${baseUrl}portfolios/delete`
 export const portfolioUrl = `${baseUrl}portfolios`
 export const orderUrl = `${baseUrl}orders`
 export const updateOrderUrl = `${baseUrl}orders/update`
+export const updatePassword = `${baseUrl}user/`
 
 // user login
 export const userLogin = async (email, password) => {
@@ -46,6 +47,20 @@ export const designerLogin = async (email, password) => {
             email: email,
             password: password,
             is_admin: 2
+        }),
+    });
+    return result;
+    
+}
+
+// Reset Password
+export const resetPass = async (id, password) => {
+
+    const result = await axios({
+        method: 'post',
+        url: `${updatePassword}${id}/password-update`,
+        data: qs.stringify({
+            password: password,
         }),
     });
     return result;
@@ -283,6 +298,20 @@ export const getPortfolio = async (user_id) => {
         params: {
             user_id: user_id
         },
+    });
+    return result;
+    
+}
+
+// Update Skills
+export const updateSkill = async (id, skills) => {
+
+    const result = await axios({
+        method: 'post',
+        url: `${updatePassword}${id}/skills-update`,
+        data: qs.stringify({
+            skills: skills,
+        }),
     });
     return result;
     
