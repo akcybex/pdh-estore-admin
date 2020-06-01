@@ -51,7 +51,7 @@ export class LoginTabset extends Component {
                     this.setState({
                         loading: false,
                     })
-                    console.log('rez => ', response)
+
                     if(response.data[0].is_admin === 1) {
 
                         ls.set('user', response.data[0])
@@ -63,8 +63,6 @@ export class LoginTabset extends Component {
                         })
                         toast.error("Email or Password Invalid!")
                     }
-
-                    
                 }
                 else {
                     this.setState({
@@ -97,10 +95,10 @@ export class LoginTabset extends Component {
                     this.setState({
                         loading: false,
                     })
-                    console.log('rez => ', response)
                     if (response.data[0].is_admin === 2) {
     
                         ls.set('user', response.data[0])
+                        ls.set('skills', response.data[0].skills)
                         this.props.history.push(`/D/list-Portfolio`);
     
                     } else {

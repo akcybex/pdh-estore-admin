@@ -16,6 +16,7 @@ export class Tabset_profile extends Component {
             designation: '',
             newPassword: '',
             isActive: false,
+            preSkills: ls.get('skills'),
             skills: [],
             skill: ''
         }
@@ -23,9 +24,14 @@ export class Tabset_profile extends Component {
     }
 
     componentDidMount() {
+        let {preSkills, skills} = this.state
+        if(preSkills !== null) {
+            skills = preSkills.split(',')
+        }
         this.setState({
             name: ls.get('user').name,
             email: ls.get('user').email,
+            skills
         })
     }
 
@@ -101,10 +107,10 @@ export class Tabset_profile extends Component {
                 await updateSkill(user.id, skills.join()).then(response =>{
 
                     if(response.status === 200) {
+                        ls.set('skills', skills.join())
                         this.setState({
                             isActive: false,
                         })
-                        console.log('rez => ', response)
                         toast.success("Skills Add Successflly!")
                     }
                     else {

@@ -7,6 +7,7 @@ export class User_menu extends Component {
 
     _logOut = () => {
         ls.remove('user');
+        ls.remove('skills');
         window.location.replace('/');
         console.log('logout')
     }
