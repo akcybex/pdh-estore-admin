@@ -46,8 +46,7 @@ export default class Messages extends Component {
                 img: doc.data().client.image
               }
               this.state.conversation.push(conversation)
-            
-              console.log(doc.id, '=>' , doc.data());
+          
               // return doc;
           });
           this.setState({
@@ -56,7 +55,7 @@ export default class Messages extends Component {
   
       }).catch(err => {
           // return err;
-          console.log(err);
+          // console.log(err);
       })
     })
     
@@ -93,7 +92,7 @@ export default class Messages extends Component {
                       <p style={{ fontWeight: "bold", color: "#000" }}>
                         {item.name}
                       </p>
-                      <p>{item.msg ? item.msg : "Click Send Message!"}</p>
+                      <p>{item.msg ? item.msg : "Click to See Messages!"}</p>
                     </div>
                   </div>
                   <p>{item.last_msg ? item.last_msg : "just now"}</p>

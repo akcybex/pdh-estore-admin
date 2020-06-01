@@ -40,7 +40,8 @@ export class Product_list extends Component {
                     toast.error("Something went wrong while loading products!")
                 } else {
                     await data.map(item => {
-                        const i = {
+                    
+                        const pro = {
                             id: item.id,
                             name: item.name,
                             category_id: item.category_id,
@@ -49,11 +50,12 @@ export class Product_list extends Component {
                             price: item.price,
                             images: item.images.split(','),
                             tag:"old",
-                            discount :"not on sale"
+                            discount :"not on sale",
+                            rating: item.rating
                         }
 
                         this.setState({
-                            pList: [...this.state.pList, i]
+                            pList: [...this.state.pList, pro]
                         })
                         
                     })
@@ -141,11 +143,46 @@ export class Product_list extends Component {
                                                     </div>
                                                     <div className="product-detail">
                                                         <div className="rating">
-                                                            <i className="fa fa-star"></i>
-                                                            <i className="fa fa-star"></i>
-                                                            <i className="fa fa-star"></i>
-                                                            <i className="fa fa-star"></i>
-                                                            <i className="fa fa-star"></i>
+                                                            {myData.rating == null ? 
+                                                                    <i className=""></i> 
+                                                                :
+                                                                myData.rating == 1 ?
+                                                                <>
+                                                                    <i className="fa fa-star"></i>
+                                                                </>
+                                                                :
+                                                                myData.rating == 2 ?
+                                                                <>
+                                                                    <i className="fa fa-star"></i>
+                                                                    <i className="fa fa-star"></i>
+                                                                </>
+                                                                :
+                                                                myData.rating == 3 ?
+                                                                <>
+                                                                    <i className="fa fa-star"></i>
+                                                                    <i className="fa fa-star"></i>
+                                                                    <i className="fa fa-star"></i>
+                                                                </>
+                                                                :
+                                                                myData.rating == 4 ?
+                                                                <>
+                                                                    <i className="fa fa-star"></i>
+                                                                    <i className="fa fa-star"></i>
+                                                                    <i className="fa fa-star"></i>
+                                                                    <i className="fa fa-star"></i>
+                                                                </>
+                                                                :
+                                                                myData.rating == 5 &&
+                                                                <>
+                                                                    <i className="fa fa-star"></i>
+                                                                    <i className="fa fa-star"></i>
+                                                                    <i className="fa fa-star"></i>
+                                                                    <i className="fa fa-star"></i>
+                                                                    <i className="fa fa-star"></i> 
+                                                                </>
+                                                                
+                                                            }
+                                                         
                                                         </div>
                                                         <a> <h6 >{myData.name}</h6></a>
                                                         {/* <h4 >{myData.price} <del >{myData.discount_price}</del></h4> */}
