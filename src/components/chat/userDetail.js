@@ -4,25 +4,25 @@ export default class UserDetail extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      conversation: [
-        {
-          id: 1,
-          name: "Jhon vick",
-          img:
-            "https://cdn.pixabay.com/photo/2016/04/01/10/11/avatar-1299805_960_720.png",
-          des: "Hi, I'm from pakistan. professional designer",
-          lang: "English",
-        },
-      ],
+      id: this.props.clientID,
+      name: this.props.name,
+      img: this.props.img,
+      des: "Hi, I'm from pakistan. professional designer",
+
     };
   }
   render() {
+    let {
+      id,
+      name,
+      img,
+      des
+    } = this.state
     return (
       <div className="user-detail">
         <div className="d-box">
-          {this.state.conversation.map((item, index) => (
             <div className="d-item">
-              <img src={item.img} className="d-img" />
+              <img src={img ? img : "https://cdn.pixabay.com/photo/2016/04/01/10/11/avatar-1299805_960_720.png"} className="d-img" alt=""/>
               <div
                 style={{
                   marginLeft: "10px",
@@ -37,13 +37,13 @@ export default class UserDetail extends Component {
                     textAlign: "center",
                   }}
                 >
-                  {item.name}
+                  {name}
                 </p>
-                <p>{item.des}</p>
-                <p>Language: {item.lang}</p>
+                <p>{des}</p>
+                {/* <p>Language: {item.lang}</p> */}
               </div>
             </div>
-          ))}
+
         </div>
       </div>
     );

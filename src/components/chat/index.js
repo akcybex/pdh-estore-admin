@@ -18,7 +18,10 @@ export default class Messages extends Component {
       conversation: [],
       designer: ls.get('user'),
       loading: false,
-      chatID: ''
+      chatID: '',
+      clientID: '',
+      name: '',
+      img: ''
     };
   }
 
@@ -40,7 +43,7 @@ export default class Messages extends Component {
                 chatID: doc.id,
                 clientID: doc.data().clientId,
                 name: doc.data().client.name,
-                img: doc.data().image
+                img: doc.data().client.image
               }
               this.state.conversation.push(conversation)
             
@@ -83,7 +86,7 @@ export default class Messages extends Component {
               </div> : 
             <div>
               {this.state.conversation.map((item, index) => (
-                <div className="c-item" onClick={() => this.setState({chatID: item.chatID})}>
+                <div className="c-item" onClick={() => this.setState({chatID: item.chatID, clientID: item.clientID, name: item.name, img: item.img})}>
                   <div style={{ display: "flex" }}>
                     <img src={item.img ? item.img : "https://cdn.pixabay.com/photo/2016/04/01/10/11/avatar-1299805_960_720.png"} className="c-img" alt=""/>
                     <div style={{marginLeft:'10px', marginTop:'10px'}}>
@@ -104,7 +107,13 @@ export default class Messages extends Component {
               {this.state.chatID !== "" && <Chatting chatID={this.state.chatID}/>}
             </div>
             <div className="user-detail">
-              <UserDetail />
+              {this.state.clientID !== "" &&  
+                <UserDetail 
+                  clientID={this.state.clientID} 
+                  name={this.state.name} 
+                  img={this.state.img} 
+                /> 
+              }
             </div>
           </div>
         </div>

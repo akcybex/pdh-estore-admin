@@ -74,3 +74,16 @@
     width: 120px;
     border-radius: 60px;
   }
+  /* Chatting */
+.composer {
+  display: flex;
+  flex: 1;
+  padding-top: 3px;
+}
+.image-upload > input {
+  display: none;
+}
+
+.composer textarea {
+  line-height: 13px !important;
+}
