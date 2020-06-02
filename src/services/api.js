@@ -274,17 +274,15 @@ export const addPortfolio = async (portfolio) => {
 // delete portfolio
 export const delPortfolio = async (portfolio_id) => {
 
-    portfolio_id.forEach(async id => {
-        
-        await axios({
-            method: 'post',
-            url: `${delPortfolioUrl}`,
-            data: qs.stringify({
-                portfolio_id: id
-            }),
-        });
-        // return result;
-    })
+    const result = await axios({
+        method: 'post',
+        url: `${delPortfolioUrl}`,
+        data: qs.stringify({
+            portfolio_id: portfolio_id
+        }),
+    });
+    return result;
+    
     
 }
 
@@ -298,6 +296,43 @@ export const getPortfolio = async (user_id) => {
         params: {
             user_id: user_id
         },
+    });
+    return result;
+    
+}
+//get portfolio by id
+export const getPortfolioById = async (id) => {
+
+        
+    const result = await axios({
+        method: 'get',
+        url: `${portfolioUrl}/${id}`,
+    });
+    return result;
+    
+}
+
+// update Portfolio
+export const updatePortfolio = async (portfolio) => {
+
+    const fd = new FormData();
+    fd.append('title', portfolio.title)
+    fd.append('description', portfolio.content)
+    fd.append('old_images', portfolio.old_images)
+    
+    await portfolio.images.forEach(item => {
+                
+        fd.append('images',item)
+        
+    })
+
+    const result = await axios({
+        method: 'post',
+        url: `${portfolioUrl}/${portfolio.id}/update`,
+        headers: {
+            "Content-Type": "multipart/form-data"
+        },
+        data: fd
     });
     return result;
     

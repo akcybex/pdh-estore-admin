@@ -1,13 +1,12 @@
 import React, { Component, Fragment} from 'react'
 import Breadcrumb from '../common/breadcrumb';
-import Modal from 'react-responsive-modal';
 import 'react-toastify/dist/ReactToastify.css';
-import data from '../../assets/data/category';
-import Datatable from '../common/datatable';
-import { getPortfolio } from '../../services/api'
+import { getPortfolio, delPortfolio } from '../../services/api'
 import Loader from 'react-loader-spinner'
+import { Edit, Trash2 } from 'react-feather'
 import { ToastContainer, toast } from 'react-toastify';
 import ls from 'local-storage'
+import { Link } from 'react-router-dom'
 
 export class Portfolio extends Component {
     constructor(props) {
@@ -49,7 +48,8 @@ export class Portfolio extends Component {
                         const i = {
                             id: item.id,
                             title: item.title,
-                            description: item.description
+                            description: item.description,
+                            images: item.images.split(','),
                         }
 
                         this.setState({
@@ -74,77 +74,93 @@ export class Portfolio extends Component {
 
     }
 
+    _removePortfolio(portfolio_id) {
+        delPortfolio(portfolio_id).then(res => {
+            
+            if(res.data.affectedRows) {
+                toast.success('Portfolio Successfully Deleted!')
+                //updating product list
+                this.setState({
+                    cList: [],
+                    list:[]
+                })
+                let { id } = this.state;
+                const portfolio = getPortfolio(id);
+                this._getPortfolio(portfolio)
+            }
+            else {
+                toast.error("Something went wrong while deleting Portfolio!")
+            }
+        }).catch(err => {
+            toast.error("Something went wrong while deleting Portfolio!")
+        })
+    }
+
     render() {
         const { open, list, loading } = this.state;
-
+        console.log(list)
         return (
             <Fragment>
                 <Breadcrumb title="Portfolio" parent="Portfolio" />
                 {/* <!-- Container-fluid starts--> */}
                 <div className="container-fluid">
-                    <div className="row">
-                        <div className="col-sm-12">
-                            <div className="card">
-                                <div className="card-header">
-                                    <h5>Portfolio</h5>
-                                </div>
-                                <div className="card-body">
-                                    <div className="btn-popup pull-right">
+                {loading ? 
+                    <div
+                        style={{
+                        width: "100%",
+                        height: "100",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center"
+                    }}>
+                        <Loader type="ThreeDots" color="#FF8084" height="100" width="100" />
 
-                                        {/* <button type="button" className="btn btn-primary" onClick={this.onOpenModal} data-toggle="modal" data-original-title="test" data-target="#exampleModal">Add Category</button> */}
-                                        <Modal open={open} onClose={this.onCloseModal} >
-                                            <div className="modal-header">
-                                                <h5 className="modal-title f-w-600" id="exampleModalLabel2">Add Physical Product</h5>
-                                            </div>
-                                            <div className="modal-body">
-                                                <form>
-                                                    <div className="form-group">
-                                                        <label htmlFor="recipient-name" className="col-form-label" >Category Name :</label>
-                                                        <input type="text" className="form-control" />
+                    </div> : 
+                    <div className="row products-admin ratio_asos">
+                        {
+                            list.map((myData, i) => {
+                                return (
+                                    <div className="col-xl-3 col-sm-6" key={i}>
+                                        <div className="card">
+                                            <div className="products-admin">
+                                                <div className="card-body product-box">
+                                                    <div className="img-wrapper">
+                                                        <div className="lable-block">
+                                                            {(myData.tag === 'new' )?<span className="lable3">{myData.tag}</span> : ''}
+                                                            {(myData.discount === 'on sale' )?<span className="lable4">{myData.discount}</span> : '' }
+                                                            </div>
+                                                        <div className="front">
+                                                            <a className="bg-size"><img className="img-fluid blur-up bg-img lazyloaded" src={myData.images[0]} /></a>
+                                                            <div className="product-hover">
+                                                                <ul>
+                                                                    <li>
+                                                                        <button className="btn" type="button">
+                                                                            <Link to={`/D/edit-portfolio/${myData.id}`}><Edit className="editBtn" /></Link>
+                                                                        </button>
+                                                                    </li>
+                                                                    <li>
+                                                                        <button className="btn" type="button" onClick={() => this._removePortfolio(myData.id)}>
+                                                                            <Trash2 className="deleteBtn" />
+                                                                        </button>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <div className="form-group">
-                                                        <label htmlFor="message-text" className="col-form-label">Category Image :</label>
-                                                        <input className="form-control" id="validationCustom02" type="file" />
+                                                    <div className="product-detail">
+                                                        <a> <h6 >{myData.title}</h6></a>
+                                                        {/* <h4 >{myData.price} <del >{myData.discount_price}</del></h4> */}
                                                     </div>
-                                                </form>
-                                            </div>true
-                                            <div className="modal-footer">
-                                                <button type="button" className="btn btn-primary" onClick={() => this.onCloseModal('VaryingMdo')}>Save</button>
-                                                <button type="button" className="btn btn-secondary" onClick={() => this.onCloseModal('VaryingMdo')}>Close</button>
+                                                </div>
                                             </div>
-                                        </Modal>
-                                    </div>
-                                    <div className="clearfix"></div>
-                                    {loading ? 
-                                        <div
-                                            style={{
-                                                width: "100%",
-                                                height: "100",
-                                                display: "flex",
-                                                justifyContent: "center",
-                                                alignItems: "center"
-                                            }}>
-                                             <Loader type="ThreeDots" color="#FF8084" height="100" width="100" />
-
-                                        </div> : 
-                                        // <div id="basicScenario" className="product-physical">
-                                        <div id="batchDelete" className="category-table user-list order-table coupon-list-delete">
-                                            <Datatable
-                                                multiSelectOption={true}
-                                                myData={list}
-                                                pageSize={10}
-                                                pagination={true}
-                                                user={false}
-                                                portfolio={true}
-                                                class="-striped -highlight"
-                                            />
                                         </div>
-                                    }
-                                    
-                                </div>
-                            </div>
-                        </div>
+                                    </div>
+                                )
+                            })
+                        }
+
                     </div>
+                }
                 </div>
                 <ToastContainer />                     
                 {/* <!-- Container-fluid Ends--> */}

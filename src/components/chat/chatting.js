@@ -74,11 +74,7 @@ export default class Chatting extends Component {
         return false;
       });
   };
-  // onSend(messages = []) {
-  // this.setState((previousState) => ({
-  // messages: GiftedChat.append(previousState.messages, messages),
-  // }));
-  // }
+
   onSend(messages = []) {
     let { chatID, img, designer } = this.state;
     // let client = JSON.parse(localStorage.getItem("logged"));

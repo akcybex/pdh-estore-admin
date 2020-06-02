@@ -40,6 +40,7 @@ import List_designer from './components/Designers/list-designer';
 import Create_designer from './components/Designers/create-designer';
 import Portfolio from './components/Designers/list-portfolio';
 import Add_portfolio from './components/Designers/add-portfolio';
+import Edit_portfolio from './components/Designers/edit-portfolio'
 import List_user from './components/users/list-user';
 import List_vendors from './components/vendors/list-vendors';
 import Create_vendors from './components/vendors/create.vendors';
@@ -101,6 +102,7 @@ class Root extends Component {
 
                             <PrivateRoute path="/D/list-Portfolio" component={Portfolio} />
                             <PrivateRoute path="/D/create-portfolio" component={Add_portfolio} />
+                            <PrivateRoute path="/D/edit-Portfolio/:id" component={Edit_portfolio} />
                             <PrivateRoute path="/D/message" component={Message} />
 
                             <PrivateRoute path="/users/list-user" component={List_user} />

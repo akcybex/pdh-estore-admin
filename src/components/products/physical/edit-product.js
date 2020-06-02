@@ -219,7 +219,7 @@ export class Edit_product extends Component {
         }
         else {
             this.setState({ isActive: true }, async() => {
-                await updateProduct({ title, price, categoryId, content, images, size, old_images , oldImg, stock, id }).then(response => {
+                await updateProduct({ title, price, categoryId, content, images, size, old_images , stock, id }).then(response => {
  
                     if(response.status === 200) {
                         this.setState({

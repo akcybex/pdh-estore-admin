@@ -1,19 +1,20 @@
-import React, { Component,Fragment } from 'react';
+import React, { Component, Fragment } from 'react'
 import Breadcrumb from '../common/breadcrumb';
 import CKEditors from "react-ckeditor-component";
 import { AvField, AvForm } from 'availity-reactstrap-validation';
 import one from '../../assets/images/pro3/1.jpg'
 import user from '../../assets/images/user.png';
-import { addPortfolio, getPortfolio } from '../../services/api'
+import { updatePortfolio, getPortfolioById } from '../../services/api'
 import Loader from 'react-loader-spinner'
 import { ToastContainer, toast } from 'react-toastify';
 import ls from 'local-storage'
 
-export class Add_portfolio extends Component {
+
+export default class Edit_portfolio extends Component {
     constructor(props) {
         super(props)
         this.state = {
-
+            id: this.props.match.params.id,
             file: '',
             dummyimgs: [
                 { img: user },
@@ -26,8 +27,8 @@ export class Add_portfolio extends Component {
             isActive: false,
             loading: false,
             preview: one,
-            id: ls.get('user').id,
-            havingPortfolio: false
+            havingPortfolio: false,
+            oldImg: [],
         }
         this.onChange = this.onChange.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -36,13 +37,11 @@ export class Add_portfolio extends Component {
     componentDidMount() {
 
         let { id } = this.state;
-        const portfolio = getPortfolio(id);
+        const portfolio = getPortfolioById(id);
         this._getPortfolio(portfolio)
     }
-
     handleChange = (event) => {
         this.setState({ [event.target.name]: event.target.value });
-        
     }
 
     onChange(evt) {
@@ -63,49 +62,51 @@ export class Add_portfolio extends Component {
         let file = e.target.files[0];
         this.state.images.push(file);
 
-        const { dummyimgs } = this.state;
+        const { dummyimgs, oldImg  } = this.state;
         
         reader.onloadend = () => {
             dummyimgs[i].img = reader.result;
+            oldImg.splice(i, 1, '');
+            //preview = reader.result;
             this.setState({
                 file: file,
                 dummyimgs,
-                preview: reader.result
+                preview: reader.result,
+                oldImg
             });
         }
         reader.readAsDataURL(file)
     }
-
-
     _handleFormSubmit(e) {
         e.preventDefault();
 
-        let { title, content, images } = this.state
-        let id = ls.get('user').id;
-        if(!images.length > 0) {
-            toast.error("Please Select atleast 1 image!")
-        } 
-        else if (content === '') {
-            toast.error("Please add Portfolio description!")
+        let { title, content, images, oldImg, id } = this.state
+     
+        const filteredImg = oldImg.filter(function (el) {
+              return el !== "";
+        });
+        const old_images = filteredImg.join();
+        
+        if (content === '') {
+            toast.error("Please add product description!")
         }
         else {
-
+            
             this.setState({ loading: true }, async() => {
-                await addPortfolio({ title, content, images, id }).then(response => {
-     
-                    if(response.data) {
+                await updatePortfolio({ title, content, images, old_images , id }).then(response => {
+ 
+                    if(response.status === 200) {
                         this.setState({
                             loading: false,
                             images: [],
-                            dummyimgs: [
-                                { img: user },
-                                { img: user },
-                                { img: user },
-                            ],
-                            preview: one
+                            // dummyimgs: [
+                            //     { img: user },
+                            //     { img: user },
+                            //     { img: user },
+                            // ],
+                            // preview: one
                         })
-                        toast.success("New Portfolio added Successflly!")
-                        window.location.replace('/D/list-Portfolio')
+                        toast.success("Portfolio updated Successflly!")
                     }
                     else {
                         this.setState({
@@ -127,19 +128,61 @@ export class Add_portfolio extends Component {
         
         this.setState({ isActive: true }, async() => {
             await portfolio.then(async response => {
-          
+                console.log(response)
                 if(!response.error) {
                     if(response.data.length > 0) {
+                        const images = response.data[0].images.split(',')
+                        const title = response.data[0].title;
+                        const content = response.data[0].description;
+                        const { dummyimgs  } = this.state;
+                        switch(images.length) {
+                            case 1: 
+                                dummyimgs[0].img = images[0];
+                                this.setState({
+                                    dummyimgs,
+                                    title, 
+                                    content,
+                                    isActive: false,
+                                    havingPortfolio: false,
+                                    oldImg: images,
+                                })
+                                break;
+                            case 2: 
+                                dummyimgs[0].img = images[0];
+                                dummyimgs[1].img = images[1];
+                                this.setState({
+                                    dummyimgs,
+                                    title, 
+                                    content,
+                                    isActive: false,
+                                    havingPortfolio: false,
+                                    oldImg: images,
+                                })
+                                break;
+                            case 3: 
+                                dummyimgs[0].img = images[0];
+                                dummyimgs[1].img = images[1];
+                                dummyimgs[2].img = images[2];
+                                this.setState({
+                                    dummyimgs,
+                                    title, 
+                                    content,
+                                    isActive: false,
+                                    havingPortfolio: false,
+                                    oldImg: images,
+                                    
+                                })
+                                break;
+                            default:
+                                break;
+                        }   
+                        
+                    } else {
                         this.setState({
                             isActive: false,
                             havingPortfolio: true
                         })
-                        toast.error("Seems to be you already have portfolio!")
-                    } else {
-                        this.setState({
-                            isActive: false,
-                            havingPortfolio: false
-                        })
+                        toast.error("Some thing went wrong!")
                     }
                 }
                 else {
@@ -154,12 +197,11 @@ export class Add_portfolio extends Component {
         })
 
     }
-
     render() {
-        const { isActive, preview, havingPortfolio, loading } = this.state;
+        let {isActive,loading, preview, havingPortfolio, title} = this.state
         return (
             <Fragment>
-                <Breadcrumb title="Add Portfolio" parent="Portfolio" />
+                <Breadcrumb title="Edit Portfolio" parent="Portfolio" />
                 {isActive ? 
                     <div
                         style={{
@@ -179,7 +221,7 @@ export class Add_portfolio extends Component {
                                 <div className="col-sm-12">
                                     <div className="card">
                                         <div className="card-header">
-                                            <h5>Add Portfolio</h5>
+                                            <h5>Edit Portfolio</h5>
                                         </div>
                                             <div className="card-body">
                                                 <div className="row product-adding">
@@ -215,7 +257,14 @@ export class Add_portfolio extends Component {
                                                                 <div className="form-group mb-3 row">
                                                                     <label className="col-xl-3 col-sm-4 mb-0">Add title :</label>
                                                                     <div className="col-xl-8 col-sm-7">
-                                                                        <AvField className="form-control" name="title" id="validationCustom01" type="text" required onChange={this.handleChange}/>
+                                                                        <AvField 
+                                                                            className="form-control" 
+                                                                            name="title" 
+                                                                            id="validationCustom01" 
+                                                                            type="text" 
+                                                                            required 
+                                                                            onChange={this.handleChange}
+                                                                            value={title}/>
                                                                     </div>
                                                                     <div className="valid-feedback">Looks good!</div>
                                                                 </div>
@@ -241,7 +290,7 @@ export class Add_portfolio extends Component {
                                                                 </div>
                                                             </div>
                                                             <div className="offset-xl-3 offset-sm-4">
-                                                                <input type="submit" className="btn btn-primary" value="Add"/>
+                                                                <input type="submit" className="btn btn-primary" value="Update"/>
                                                                 {/* <button type="button" className="btn btn-light">Discard</button> */}
                                                             </div>
                                                             {loading &&
@@ -273,5 +322,3 @@ export class Add_portfolio extends Component {
         )
     }
 }
-
-export default Add_portfolio

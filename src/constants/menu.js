@@ -6,7 +6,10 @@ import {
     Camera,
     UserPlus,
     Users,
-    BarChart,Settings,Archive
+    BarChart,
+    Settings,
+    Archive,
+    MessageSquare
 } from 'react-feather';
 
 export const MENUITEMS = [
@@ -85,6 +88,9 @@ export const MENUITEMS = [
 ]
 
 export const DMENUITEMS = [
+    {
+        title: 'Messages', path: '/D/message', icon: MessageSquare, type: 'link', active: false
+    },
     {
         path: '/D/list-Portfolio', title: 'Portfolio', icon: UserPlus, type: 'link', badgeType: 'primary', active: false
     },
