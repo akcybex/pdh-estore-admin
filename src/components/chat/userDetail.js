@@ -11,6 +11,15 @@ export default class UserDetail extends Component {
 
     };
   }
+  componentDidUpdate(prevProps) {
+    if(this.props.clientID !== prevProps.clientID) {
+      this.setState({
+        id: this.props.clientID,
+        name: this.props.name,
+        img: this.props.img,
+      })
+    }
+  }
   render() {
     let {
       id,

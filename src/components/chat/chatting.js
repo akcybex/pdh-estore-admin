@@ -23,7 +23,19 @@ export default class Chatting extends Component {
 
   componentDidMount() {
     let { chatID } = this.state;
-    
+    this.fetchChat(chatID);
+  }
+
+  componentDidUpdate(prevProps) {
+    if(this.props.chatID !== prevProps.chatID) {
+      this.setState({
+        chatID: this.props.chatID
+      })
+      this.fetchChat(this.props.chatID);
+    }
+  }
+
+  fetchChat(chatID) {
     chatRef
       .doc(chatID)
       .collection("MESSAGES")
@@ -39,7 +51,6 @@ export default class Chatting extends Component {
           loading: false,
         });
       });
-    
   }
 
   // File select
@@ -241,7 +252,7 @@ export default class Chatting extends Component {
 
   render() {
     let {loading} = this.state
- 
+    console.log('render called');
     return (
       <>
         {loading ?

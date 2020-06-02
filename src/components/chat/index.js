@@ -85,7 +85,11 @@ export default class Messages extends Component {
               </div> : 
             <div>
               {this.state.conversation.map((item, index) => (
-                <div className="c-item" onClick={() => this.setState({chatID: item.chatID, clientID: item.clientID, name: item.name, img: item.img})}>
+                <div className="c-item" onClick={() => this.setState({
+                  chatID: item.chatID, 
+                  clientID: item.clientID, 
+                  name: item.name, 
+                  img: item.img})}>
                   <div style={{ display: "flex" }}>
                     <img src={item.img ? item.img : "https://cdn.pixabay.com/photo/2016/04/01/10/11/avatar-1299805_960_720.png"} className="c-img" alt=""/>
                     <div style={{marginLeft:'10px', marginTop:'10px'}}>

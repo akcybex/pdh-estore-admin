@@ -13,7 +13,7 @@
     flex-direction: column;
   }
   .chatting {
-    flex-grow: 8;
+    width: 500px;
   }
   .user-detail {
     flex-grow: 1;
