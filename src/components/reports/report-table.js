@@ -3,6 +3,7 @@ import data from '../../assets/data/reports';
 import Datatable from '../common/datatable'
 
 export class Report_table extends Component {
+    
     render() {
         return (
             <Fragment>
