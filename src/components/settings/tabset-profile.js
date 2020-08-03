@@ -15,6 +15,7 @@ export class Tabset_profile extends Component {
             user: ls.get('user'),
             designation: '',
             newPassword: '',
+            prePassword: '',
             isActive: false,
             preSkills: ls.get('skills'),
             skills: [],
@@ -45,7 +46,9 @@ export class Tabset_profile extends Component {
     handleResetSubmit = (e) => {
         e.preventDefault();
 
-        let {user, newPassword} = this.state
+        let {user, newPassword, prePassword} = this.state
+
+        if(user.password === prePassword) {
 
             this.setState({ isActive: true }, async() => {
 
@@ -55,8 +58,9 @@ export class Tabset_profile extends Component {
                         this.setState({
                             isActive: false,
                         })
-                        console.log('rez => ', response)
                         toast.success("Password updated Successflly!")
+                        user.password = newPassword;
+                        ls.set('user', user)
                     }
                     else {
                         this.setState({
@@ -72,7 +76,9 @@ export class Tabset_profile extends Component {
                     toast.error("Something went wrong!")
                 })
             })
-        
+        } else {
+            toast.error("Current Password invalid!")
+        }
     }
 
     listSkill = (e) => {
@@ -200,10 +206,10 @@ export class Tabset_profile extends Component {
                     <TabPanel>
                         <form className="needs-validation user-add" onSubmit={this.handleResetSubmit} >
                             <h4>Reset Password</h4>
-                            {/* <div className="form-group row">
+                            <div className="form-group row">
                                 <label className="col-xl-3 col-md-4"><span>*</span> Current Password</label>
                                 <input className="form-control col-xl-8 col-md-7" id="validationCustom3" name="prePassword" type="password" required onChange={this.handleChange} />
-                            </div> */}
+                            </div>
                             <div className="form-group row">
                                 <label className="col-xl-3 col-md-4"><span>*</span> New Password</label>
                                 <input className="form-control col-xl-8 col-md-7" id="validationCustom4" name="newPassword" type="password" required onChange={this.handleChange}/>
